@@ -1,0 +1,33 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="RsffMasterPage.master.cs" Inherits="RsffMasterPage" %>
+
+<!DOCTYPE html>
+<html>
+<head runat="server">
+    <meta charset="UTF-8" />
+    <title></title>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <nav>
+            <asp:Label runat="server" Text="Navigation Menu"></asp:Label>
+            <asp:Menu ID="NavigationMenu" runat="server" EnableViewState="false" IncludeStyleBlock="false" Orientation="Horizontal">
+                <Items>
+                    <asp:MenuItem NavigateUrl="~/Projects.aspx" Text="Projects"/>
+                    <asp:MenuItem NavigateUrl="~/Default.aspx" Text="Parcels"/>
+                    <asp:MenuItem NavigateUrl="~/Default.aspx" Text="Customers"/>
+                    <asp:MenuItem NavigateUrl="~/Default.aspx" Text="Payments"/>
+                    <asp:MenuItem NavigateUrl="~/Default.aspx" Text="Streets"/>
+                    <asp:MenuItem NavigateUrl="~/Default.aspx" Text="Admin"/>
+                    <asp:MenuItem NavigateUrl="~/Default.aspx" Text="Logoff"/>
+                </Items>
+            </asp:Menu>
+        </nav>   
+        <div>
+        <hr />
+        <hr />
+        <asp:ContentPlaceHolder id="ContentPlaceHolderBody" runat="server">
+        </asp:ContentPlaceHolder>
+    </div>
+    </form>
+</body>
+</html>

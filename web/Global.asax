@@ -1,0 +1,1 @@
+﻿<%@ Application CodeBehind="Global.asax.cs" Inherits="Rsff.Web.Global" %>
