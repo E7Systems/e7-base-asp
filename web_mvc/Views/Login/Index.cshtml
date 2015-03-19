@@ -6,17 +6,21 @@
 
 <br/>
 
-<form method="post">
-    <p>
+@using(Html.BeginForm())
+{ 
+    
+    @Html.ValidationSummary()
+        
+    <div>
         @Html.LabelFor(x => x.UserName)
         @Html.EditorFor(x => x.UserName)
-    </p>
+    </div>
 
-    <p>
+    <div>
         @Html.LabelFor(x => x.Password)
-        @Html.PasswordFor(x => x.Password)
-    </p>
-
+        @Html.EditorFor(x => x.Password)
+    </div>
+    
     <input type="submit" value="Log In" />
 
-</form>
+}

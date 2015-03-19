@@ -15,18 +15,28 @@ namespace web_mvc.Controllers
         [HttpPost]
         public ActionResult Index(LoginIndex form)
         {
-            string userName = form.UserName;
-            string password = form.Password;
-            
-            bool isValidUser = Membership.ValidateUser(userName, password);
-
-            if (isValidUser)
+            if (ModelState.IsValid)
             {
-                return Content("passed top secret login process");
+                //passed validation, see if login credentials are valid
+                string userName = form.UserName;
+                string password = form.Password;
+
+                bool isValidUser = Membership.ValidateUser(userName, password);
+
+                if (isValidUser)
+                {
+                    return RedirectToRoute("projects");
+                }
+                else
+                {
+                    ModelState.AddModelError("UserName", "Username or password is not correct.");
+                    return View(form);
+                }
             }
             else
             {
-                return Content("failed login");
+                //failed validation, send back for another try
+                return View(form);
             }
         }
     }
