@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="Projects" Language="C#" MasterPageFile="~/RsffMasterPage.master" AutoEventWireup="true" CodeFile="Projects.aspx.cs" Inherits="Projects" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolderBody" Runat="Server">
-    I am your projects grid title
+    <h2>Projects List</h2>
     <br />
     <asp:TextBox ID="TextBox1" runat="server"></asp:TextBox>
     <asp:TextBox ID="TextBox2" runat="server"></asp:TextBox>

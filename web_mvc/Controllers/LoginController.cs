@@ -1,18 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
+using web_mvc.ViewModels;
+using System.Web.Security;
 
 namespace web_mvc.Controllers
 {
     public class LoginController : Controller
     {
-        // GET: Login
+        // GET: /login
         public ActionResult Index()
         {
-            return Content("Login Controller");
+            return View(new LoginIndex());
+        }
 
+        [HttpPost]
+        public ActionResult Index(LoginIndex form)
+        {
+            string userName = form.UserName;
+            string password = form.Password;
+            
+            bool isValidUser = Membership.ValidateUser(userName, password);
+
+            if (isValidUser)
+            {
+                return Content("passed top secret login process");
+            }
+            else
+            {
+                return Content("failed login");
+            }
         }
     }
 }

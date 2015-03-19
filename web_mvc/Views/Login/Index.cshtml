@@ -1,0 +1,22 @@
+﻿@model web_mvc.ViewModels.LoginIndex
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<br/>
+
+<form method="post">
+    <p>
+        @Html.LabelFor(x => x.UserName)
+        @Html.EditorFor(x => x.UserName)
+    </p>
+
+    <p>
+        @Html.LabelFor(x => x.Password)
+        @Html.PasswordFor(x => x.Password)
+    </p>
+
+    <input type="submit" value="Log In" />
+
+</form>
