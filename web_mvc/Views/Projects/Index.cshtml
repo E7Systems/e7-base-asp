@@ -1,7 +1,35 @@
 ﻿
+
+@model web_mvc.ViewModels.ProjectIndex
+
 @{
     ViewBag.Title = "Index";
 }
 
 <h2>Hi I am your Projects Index.cshtml</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Address</th>
+            <th>APN</th>
+            <th>Project Name</th>
+            <th>Plan Check Number</th>
+            <th>Notes</th>
+        </tr>
+    </thead>
+
+    @foreach (var project in Model.projects)
+    {
+        <tr>
+        <td> @project.Address</td>
+        <td> @project.APN</td>
+        <td> @project.ProjectName</td>
+        <td> @project.PlanCheckNumber</td>
+        <td> @project.Notes</td>
+        </tr>
+    }
+
+</table>
+    
 

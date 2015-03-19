@@ -1,8 +1,7 @@
-﻿using System;
+﻿using Rsff.BusinessLayer;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
+using web_mvc.ViewModels;
 
 namespace web_mvc.Controllers
 {
@@ -11,7 +10,13 @@ namespace web_mvc.Controllers
         // GET: Projects
         public ActionResult Index()
         {
-            return View();
+            ProjectsBusinessLogic projectsBusinessLogic = new ProjectsBusinessLogic();
+            List<Project> projects = projectsBusinessLogic.GetAllProjects();
+            ProjectIndex projectIndex = new ProjectIndex();
+            projectIndex.projects = projects;
+            return View(projectIndex);
+
+            //return View(new ProjectIndex());
         }
     }
 }
