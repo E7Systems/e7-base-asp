@@ -6,6 +6,6 @@ namespace web_mvc.ViewModels
 {
     public class ProjectIndex
     {
-        public List<Project> projects { get; set; }
+        public IEnumerable<Project> projects { get; set; }
     }
 }
