@@ -5,6 +5,7 @@ using web_mvc.ViewModels;
 
 namespace web_mvc.Controllers
 {
+    //handles login.  This is the default route, so all unknown/unmatched url requests are redirected here.
     public class LoginController : Controller
     {
         private static readonly ILog m_logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -34,14 +35,15 @@ namespace web_mvc.Controllers
                 }
                 else
                 {
+                    m_logger.DebugFormat("Invalid credentials for userName : {0}", userName);
                     ModelState.AddModelError("UserName", "Username or password is not correct.");
                     return View(form);
                 }
             }
             else
             {
+                //failed form validation, send back for another try
                 m_logger.Debug("ModelState.IsValid=false");
-                //failed validation, send back for another try
                 return View(form);
             }
         }

@@ -1,10 +1,10 @@
 ﻿@model web_mvc.ViewModels.LoginIndex
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Login";
 }
 
-<br/>
+@Html.AntiForgeryToken();
 
 @using(Html.BeginForm())
 { 

@@ -24,7 +24,7 @@ namespace web_mvc
 
             routes.MapRoute(
                 name: "login",
-                url: "",
+                url: string.Empty,  //empty string means match anything not explicitly mapped elsewhere
                 defaults: new { controller = "Login", action = "Index" }
             );
         }
