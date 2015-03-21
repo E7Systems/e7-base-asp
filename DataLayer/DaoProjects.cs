@@ -92,6 +92,57 @@ namespace Rsff.DataLayer
             }
         } 
         #endregion
-       
+  
+        //returns 2 data tables
+        //1st data table contains a page of data
+        //2nd data table is a 1 row, 1 column data table which is the count of rows in entire table.  
+        //this is used for paging.  i retrieve it so i only make 1 trip to the db
+        public DataSet GetProjectPage(int rowFrom, int rowTo)
+        {
+            const string PROC = "[dbo].[up_Project_Get_Page]";
+            DataSet ds = new DataSet();
+            using (SqlConnection conn = new SqlConnection(m_ConnectionString))
+            {
+                using (SqlDataAdapter adapter = new SqlDataAdapter())
+                {
+                    using (SqlCommand command = new SqlCommand())
+                    {
+                        command.CommandType = System.Data.CommandType.StoredProcedure;
+                        command.CommandText = PROC;
+                        command.Parameters.AddWithValue("@rowFrom", rowFrom);
+                        command.Parameters.AddWithValue("@rowTo", rowTo);
+                        conn.Open();
+                        command.Connection = conn;
+                        adapter.SelectCommand = command;
+                        adapter.Fill(ds);
+                        conn.Close();
+                        return ds;
+                    }
+                }
+            }
+        }
+
+        //obselete, get rid of this and the stored proc too
+        public int GetProjectsCount()
+        {
+            const string PROC = "[dbo].[up_Project_Get_TotalCount]";
+            using (SqlConnection conn = new SqlConnection(m_ConnectionString))
+            {
+                using (SqlDataAdapter adapter = new SqlDataAdapter())
+                {
+                    using (SqlCommand command = new SqlCommand())
+                    {
+                        command.CommandType = System.Data.CommandType.StoredProcedure;
+                        command.CommandText = PROC;
+                        conn.Open();
+                        command.Connection = conn;
+                        adapter.SelectCommand = command;
+                        object rowCount = command.ExecuteScalar();
+                        conn.Close();
+                        return Convert.ToInt32(rowCount);
+                    }
+                }
+            }
+        }
     }
 }

@@ -52,5 +52,27 @@ namespace DataLayer_Tests
 
         } 
         #endregion
+    
+        [Test]
+        public void TestGetProjectCount()
+        {
+            DaoProjects dao = new DaoProjects();
+            int rowCount = dao.GetProjectsCount();
+            Assert.Greater(rowCount, 0);
+
+        }
+
+        [Test]
+        public void TestGetProjectPage()
+        {
+            const int ROW_FROM = 5;
+            const int ROW_TO = 15;
+
+            DaoProjects dao = new DaoProjects();
+            DataSet ds = dao.GetProjectPage(ROW_FROM, ROW_TO);
+            Assert.AreEqual(2, ds.Tables.Count);
+            Assert.AreEqual(11, ds.Tables[0].Rows.Count);
+            Assert.AreEqual(1, ds.Tables[1].Rows.Count);
+        }
     }
 }

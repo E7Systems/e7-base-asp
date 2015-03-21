@@ -2,6 +2,7 @@
 using System.Data;
 using NUnit.Framework;
 using Rsff.BusinessLayer;
+using System;
 
 namespace BusinessLayer_Tests
 {
@@ -25,6 +26,26 @@ namespace BusinessLayer_Tests
             List<Project> projects = projectsBusinessLogic.GetAllProjects();
             //simple test verifies we got back at least some data.
             Assert.Greater(projects.Count, 0);
+        }
+
+        [Test]
+        public void TestGetProjectPage()
+        {
+            const int ROW_FROM = 5;
+            const int ROW_TO = 15;
+
+            ProjectsBusinessLogic projectsBusinessLogic = new ProjectsBusinessLogic();
+            Tuple<List<Project>, int> projectsPage = projectsBusinessLogic.GetProjectPage(ROW_FROM, ROW_TO);
+
+            Assert.AreEqual(11, projectsPage.Item1.Count);
+            Assert.AreEqual(84, projectsPage.Item2);
+        }
+        //obselete get rid of this
+        public void TestGetProjectCount()
+        {
+            ProjectsBusinessLogic projectsBusinessLogic = new ProjectsBusinessLogic();
+            int projectCount = projectsBusinessLogic.GetProjectsCount();
+            Assert.Greater(projectCount, 0);
         }
     }
 }

@@ -18,8 +18,8 @@ namespace web_mvc.Controllers
             List<Project> projects = projectsBusinessLogic.GetAllProjects();
             ProjectIndex projectIndex = new ProjectIndex();
 
-            //handle paging
-            int totalProjectsCount = projects.Count;  //create a separate proc for this - no need to haul all this data back from sql
+            //get a count of all projects in the db
+            int totalProjectsRecordCount = projectsBusinessLogic.GetProjectsCount();  //this is making a separate trip to db, combine it with paging proc
 
             //fake up a static page, this should come from the db
             List<Project> currentProjectPage = new List<Project>();
@@ -29,7 +29,7 @@ namespace web_mvc.Controllers
             }
 
             //stuff it into a ViewModel
-            projectIndex.projects = new PagedData<Project>(currentProjectPage, totalProjectsCount, page, PROJECTS_PER_PAGE);
+            projectIndex.projects = new PagedData<Project>(currentProjectPage, totalProjectsRecordCount, page, PROJECTS_PER_PAGE);
             
             //send it to be displayed in the view
             return View(projectIndex);

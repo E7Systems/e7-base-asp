@@ -60,5 +60,50 @@ namespace Rsff.BusinessLayer
             return projects;
         } 
         #endregion
+    
+        //gets a single page of data
+        public Tuple<List<Project>, int> GetProjectPage(int fromRow, int toRow)
+        {
+            DaoProjects dao = new DaoProjects();
+            //this dataset returns 2 data tables
+            //i am doing this to avoid making 2 trips to the db
+            //1 for the data
+            //1 for the row count
+            DataSet ds = dao.GetProjectPage(fromRow, toRow);
+
+            List<Project> projects = new List<Project>();
+
+            DataTable tbl = ds.Tables[0];
+            for (int i = 0; i < tbl.Rows.Count; i++)
+            {
+                Project project = new Project();
+                DataRow row = tbl.Rows[i];
+                project.Address = Convert.ToString(row["Address"]);
+                project.APN = Convert.ToString(row["APN"]);
+                project.Notes = Convert.ToString(row["Notes"]);
+                project.PlanCheckNumber = Convert.ToInt32(row["PlanCheckNumber"]);
+                project.ProjectName = Convert.ToString(row["ProjectName"]);
+                projects.Add(project);
+            }
+
+            tbl = ds.Tables[1];
+            int rowCount = Convert.ToInt32(tbl.Rows[0][0]);
+
+            return Tuple.Create<List<Project>, int>(projects, rowCount);
+
+        }
+
+        //obselete:  get rid of this and the stored proc as well
+        //gets a count of the total number of projects in the db
+        public int GetProjectsCount()
+        {
+            DaoProjects dao = new DaoProjects();
+            return dao.GetProjectsCount();
+        }
+
+        public void foo()
+        {
+            //Tuple
+        }
     }
 }
