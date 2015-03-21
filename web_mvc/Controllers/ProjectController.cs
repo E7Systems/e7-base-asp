@@ -5,7 +5,7 @@ using web_mvc.ViewModels;
 
 namespace web_mvc.Controllers
 {
-    public class ProjectsController : Controller
+    public class ProjectController : Controller
     {
         // GET: / (will be GET: /Projects)  TEMPORARY
         public ActionResult Index()

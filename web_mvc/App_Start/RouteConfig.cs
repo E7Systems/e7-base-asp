@@ -16,17 +16,10 @@ namespace web_mvc
             //explicitly set routes here - gives flexibility while doing early controller development
             //TEMPORARY
 
-
-            //routes.MapRoute(
-            //    name: "home",
-            //    url: "",
-            //    defaults: new { controller = "Home", action = "Index" }
-            //);
-
             routes.MapRoute(
-                name: "projects",
-                url: "projects",
-                defaults: new { controller = "Projects", action = "Index" }
+                name: "project",
+                url: "project",
+                defaults: new { controller = "Project", action = "Index" }
             );
 
             routes.MapRoute(

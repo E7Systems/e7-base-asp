@@ -20,17 +20,17 @@ namespace web_mvc.Controllers
         {
             if (ModelState.IsValid)
             {
-                //passed validation, see if login credentials are valid
+                //passed form validation, see if login credentials are valid
                 string userName = form.UserName;
                 string password = form.Password;
 
-                m_logger.DebugFormat("Membership.ValidateUser for userName: {0}", userName);
 
                 bool isValidUser = Membership.ValidateUser(userName, password);
+                m_logger.DebugFormat("Membership.ValidateUser result for userName: {0} = {1}", userName, isValidUser);
 
                 if (isValidUser)
                 {
-                    return RedirectToRoute("projects");
+                    return RedirectToRoute("project");
                 }
                 else
                 {
@@ -40,6 +40,7 @@ namespace web_mvc.Controllers
             }
             else
             {
+                m_logger.Debug("ModelState.IsValid=false");
                 //failed validation, send back for another try
                 return View(form);
             }
