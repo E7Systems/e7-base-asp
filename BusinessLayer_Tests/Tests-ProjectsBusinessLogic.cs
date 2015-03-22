@@ -37,10 +37,17 @@ namespace BusinessLayer_Tests
             ProjectsBusinessLogic projectsBusinessLogic = new ProjectsBusinessLogic();
             Tuple<List<Project>, int> projectsPage = projectsBusinessLogic.GetProjectPage(ROW_FROM, ROW_TO);
 
-            Assert.AreEqual(11, projectsPage.Item1.Count);
-            Assert.AreEqual(84, projectsPage.Item2);
+            //verify rows per page is correct
+            int rowsPerPage = ROW_TO - ROW_FROM + 1;
+            Assert.AreEqual(rowsPerPage, projectsPage.Item1.Count);
+
+            //verify total count in projects table is correct
+            int projectCount = projectsBusinessLogic.GetProjectsCount();
+            Assert.AreEqual(projectCount, projectsPage.Item2);
         }
-        //obselete get rid of this
+        
+        //obselete, but used in unit testing
+        //either move this into a unit testing db or delete it
         public void TestGetProjectCount()
         {
             ProjectsBusinessLogic projectsBusinessLogic = new ProjectsBusinessLogic();
