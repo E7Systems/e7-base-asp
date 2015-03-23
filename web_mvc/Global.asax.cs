@@ -23,5 +23,11 @@ namespace web_mvc
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
         }
+
+        protected void Application_End()
+        {
+            ILog logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+            logger.InfoFormat("Application Ended, version is {0}", Assembly.GetExecutingAssembly().GetName().Version.ToString());
+        }
     }
 }

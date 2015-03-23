@@ -13,6 +13,7 @@
 <table>
     <thead>
         <tr>
+            <th>Project ID</th>
             <th>Address</th>
             <th>APN</th>
             <th>Project Name</th>
@@ -21,9 +22,10 @@
         </tr>
     </thead>
 
-    @foreach (var project in Model.projects)
+    @foreach (var project in Model.Projects)
     {
         <tr>
+            <td> @project.ProjectID</td>
             <td> @project.Address</td>
             <td> @project.APN</td>
             <td> @project.ProjectName</td>
@@ -35,3 +37,25 @@
 </table>
     
 
+@if(Model.Projects.HasPreviousPage)
+    {
+    
+    <a href="@Url.Action("Index", new {page = Model.Projects.PreviousPage})">
+        Previous Page
+    </a>
+    }
+ else
+    {
+    <a href="#">No Previous Page</a>
+    }
+
+@if (Model.Projects.HasNextPage)
+{
+    <a href="@Url.Action("Index", new {page = Model.Projects.NextPage})">
+        Next Page
+    </a>
+}
+else
+{
+    <a href="#">No Next Page</a>
+}

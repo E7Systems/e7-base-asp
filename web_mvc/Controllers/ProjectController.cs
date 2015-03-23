@@ -1,35 +1,39 @@
-﻿using Rsff.BusinessLayer;
+﻿using log4net;
+using Rsff.BusinessLayer;
+using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
-using web_mvc.ViewModels;
 using web_mvc.Infrastructure;
+using web_mvc.ViewModels;
 
 namespace web_mvc.Controllers
 {
+    //[Authorize(Roles="admin")]
     public class ProjectController : Controller
     {
+        private static readonly ILog m_logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private const int PROJECTS_PER_PAGE = 10;
 
         // GET: /Projects
+        // Displays a page of projects
         public ActionResult Index(int page = 1)
         {
-            //get list of projects from db
+
             ProjectsBusinessLogic projectsBusinessLogic = new ProjectsBusinessLogic();
-            List<Project> projects = projectsBusinessLogic.GetAllProjects();
+
+            //data comes back packed into a tuple to avoid 2 trips to db
+            //1st item is page of data
+            //2nd item is total number of records in table
+            Tuple<List<Project>, int> pagedDataTuple = projectsBusinessLogic.GetProjectPage(page, PROJECTS_PER_PAGE);
+
+            List<Project> pageOfProjects = pagedDataTuple.Item1;
+            int totalProjectsRecordCount = pagedDataTuple.Item2;
+            m_logger.DebugFormat("Current Page: {0}, Rows per page: {1}, totalProjectsRecordCount: {2}", page, PROJECTS_PER_PAGE, totalProjectsRecordCount);
+
             ProjectIndex projectIndex = new ProjectIndex();
 
-            //get a count of all projects in the db
-            int totalProjectsRecordCount = projectsBusinessLogic.GetProjectsCount();  //this is making a separate trip to db, combine it with paging proc
-
-            //fake up a static page, this should come from the db
-            List<Project> currentProjectPage = new List<Project>();
-            for (int i = 0; i < PROJECTS_PER_PAGE; i++ )
-            {
-                currentProjectPage.Add(projects[i]);
-            }
-
-            //stuff it into a ViewModel
-            projectIndex.projects = new PagedData<Project>(currentProjectPage, totalProjectsRecordCount, page, PROJECTS_PER_PAGE);
+            //stuff page of Projects into a ViewModel
+            projectIndex.Projects = new PagedData<Project>(pageOfProjects, totalProjectsRecordCount, page, PROJECTS_PER_PAGE);
             
             //send it to be displayed in the view
             return View(projectIndex);

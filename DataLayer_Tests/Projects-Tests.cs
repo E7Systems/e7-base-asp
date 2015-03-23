@@ -62,17 +62,25 @@ namespace DataLayer_Tests
 
         }
 
-        [Test]
+        [Test(Description="Tests Paging Logic")]
         public void TestGetProjectPage()
         {
             const int ROW_FROM = 5;
-            const int ROW_TO = 15;
+            const int ROW_TO = 14;
 
             DaoProjects dao = new DaoProjects();
             DataSet ds = dao.GetProjectPage(ROW_FROM, ROW_TO);
             Assert.AreEqual(2, ds.Tables.Count);
-            Assert.AreEqual(11, ds.Tables[0].Rows.Count);
-            Assert.AreEqual(1, ds.Tables[1].Rows.Count);
+            //verify 1st table has the data
+            Assert.AreEqual(ROW_TO-ROW_FROM+1, ds.Tables[0].Rows.Count);
+            //verify paging logic is ok by comparing identity row ProjectID to row_from.  
+            Assert.AreEqual(ROW_FROM, Convert.ToInt32(ds.Tables[0].Rows[0]["ProjectID"]));
+            Assert.AreEqual(ROW_TO, Convert.ToInt32(ds.Tables[0].Rows[ROW_TO-ROW_FROM]["ProjectID"]));
+
+            //verify 2nd table has correct row count
+            int rowCount = dao.GetProjectsCount();
+            Assert.Greater(rowCount, 0);
+            Assert.AreEqual(rowCount, Convert.ToInt32(ds.Tables[1].Rows[0][0]));
         }
     }
 }

@@ -62,22 +62,27 @@ namespace Rsff.BusinessLayer
         #endregion
     
         //gets a single page of data
-        public Tuple<List<Project>, int> GetProjectPage(int fromRow, int toRow)
+        public Tuple<List<Project>, int> GetProjectPage(int currentPage, int rowsPerPage)
         {
+            int row_From = (currentPage - 1) * rowsPerPage + 1;
+            int row_To = row_From + rowsPerPage - 1;
+
             DaoProjects dao = new DaoProjects();
             //this dataset returns 2 data tables
             //i am doing this to avoid making 2 trips to the db
             //1 for the data
             //1 for the row count
-            DataSet ds = dao.GetProjectPage(fromRow, toRow);
+            DataSet ds = dao.GetProjectPage(row_From, row_To);
 
             List<Project> projects = new List<Project>();
 
+            //1st table for the data
             DataTable tbl = ds.Tables[0];
             for (int i = 0; i < tbl.Rows.Count; i++)
             {
                 Project project = new Project();
                 DataRow row = tbl.Rows[i];
+                project.ProjectID = Convert.ToInt32(row["ProjectID"]);
                 project.Address = Convert.ToString(row["Address"]);
                 project.APN = Convert.ToString(row["APN"]);
                 project.Notes = Convert.ToString(row["Notes"]);
@@ -86,6 +91,7 @@ namespace Rsff.BusinessLayer
                 projects.Add(project);
             }
 
+            //2nd table for the row count
             tbl = ds.Tables[1];
             int rowCount = Convert.ToInt32(tbl.Rows[0][0]);
 
