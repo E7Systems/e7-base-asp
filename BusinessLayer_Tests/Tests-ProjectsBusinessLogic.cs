@@ -31,15 +31,14 @@ namespace BusinessLayer_Tests
         [Test]
         public void TestGetProjectPage()
         {
-            const int ROW_FROM = 5;
-            const int ROW_TO = 15;
+            const int CURRENT_PAGE = 2;
+            const int ROWS_PER_PAGE = 10;
 
             ProjectsBusinessLogic projectsBusinessLogic = new ProjectsBusinessLogic();
-            Tuple<List<Project>, int> projectsPage = projectsBusinessLogic.GetProjectPage(ROW_FROM, ROW_TO);
+            Tuple<List<Project>, int> projectsPage = projectsBusinessLogic.GetProjectPage(CURRENT_PAGE, ROWS_PER_PAGE);
 
             //verify rows per page is correct
-            int rowsPerPage = ROW_TO - ROW_FROM + 1;
-            Assert.AreEqual(rowsPerPage, projectsPage.Item1.Count);
+            Assert.AreEqual(ROWS_PER_PAGE, projectsPage.Item1.Count);
 
             //verify total count in projects table is correct
             int projectCount = projectsBusinessLogic.GetProjectsCount();
@@ -48,6 +47,7 @@ namespace BusinessLayer_Tests
         
         //obselete, but used in unit testing
         //either move this into a unit testing db or delete it
+        [Test]
         public void TestGetProjectCount()
         {
             ProjectsBusinessLogic projectsBusinessLogic = new ProjectsBusinessLogic();

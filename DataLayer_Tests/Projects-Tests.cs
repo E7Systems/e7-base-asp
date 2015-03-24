@@ -1,7 +1,7 @@
-﻿using System;
-using System.Data;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Rsff.DataLayer;
+using System;
+using System.Data;
 
 namespace DataLayer_Tests
 {
@@ -52,17 +52,20 @@ namespace DataLayer_Tests
 
         } 
         #endregion
-    
-        [Test]
+
+        #region TestGetProjectCount
+        [Test(Description = "Tests Count Functionality")]
         public void TestGetProjectCount()
         {
             DaoProjects dao = new DaoProjects();
             int rowCount = dao.GetProjectsCount();
             Assert.Greater(rowCount, 0);
 
-        }
+        } 
+        #endregion
 
-        [Test(Description="Tests Paging Logic")]
+        #region TestGetProjectPage
+        [Test(Description = "Tests Paging Logic")]
         public void TestGetProjectPage()
         {
             const int ROW_FROM = 5;
@@ -71,16 +74,17 @@ namespace DataLayer_Tests
             DaoProjects dao = new DaoProjects();
             DataSet ds = dao.GetProjectPage(ROW_FROM, ROW_TO);
             Assert.AreEqual(2, ds.Tables.Count);
-            //verify 1st table has the data
-            Assert.AreEqual(ROW_TO-ROW_FROM+1, ds.Tables[0].Rows.Count);
+            //verify 1st table has the correct number of rows of data
+            Assert.AreEqual(ROW_TO - ROW_FROM + 1, ds.Tables[0].Rows.Count);
             //verify paging logic is ok by comparing identity row ProjectID to row_from.  
             Assert.AreEqual(ROW_FROM, Convert.ToInt32(ds.Tables[0].Rows[0]["ProjectID"]));
-            Assert.AreEqual(ROW_TO, Convert.ToInt32(ds.Tables[0].Rows[ROW_TO-ROW_FROM]["ProjectID"]));
+            Assert.AreEqual(ROW_TO, Convert.ToInt32(ds.Tables[0].Rows[ROW_TO - ROW_FROM]["ProjectID"]));
 
             //verify 2nd table has correct row count
             int rowCount = dao.GetProjectsCount();
             Assert.Greater(rowCount, 0);
             Assert.AreEqual(rowCount, Convert.ToInt32(ds.Tables[1].Rows[0][0]));
-        }
+        } 
+        #endregion
     }
 }

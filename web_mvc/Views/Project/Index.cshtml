@@ -13,19 +13,17 @@
 <table>
     <thead>
         <tr>
-            <th>Project ID</th>
-            <th>Address</th>
-            <th>APN</th>
-            <th>Project Name</th>
-            <th><a href="@Url.Action("Index", new {page = Model.Projects.Page, SortOrder=Model.SortOrder, SortBy=Model.SortBy})">Plan Check Number</a></th>
-            <th>Notes</th>
+            <th><a href="@Url.Action("Index", new {page = Model.Projects.Page, SortOrder=Model.SortOrder, SortBy="Address"})">Address</a></th>
+            <th><a href="@Url.Action("Index", new {page = Model.Projects.Page, SortOrder=Model.SortOrder, SortBy="APN"})">APN</a></th>
+            <th><a href="@Url.Action("Index", new {page = Model.Projects.Page, SortOrder=Model.SortOrder, SortBy="ProjectName"})">Project Name</a></th>
+            <th><a href="@Url.Action("Index", new {page = Model.Projects.Page, SortOrder=Model.SortOrder, SortBy="PlanCheckNumber"})">Plan Check Number</a></th>
+            <th><a href="@Url.Action("Index", new {page = Model.Projects.Page, SortOrder=Model.SortOrder, SortBy="Notes"})">Notes</a></th>
         </tr>
     </thead>
 
     @foreach (var project in Model.Projects)
     {
         <tr>
-            <td> @project.ProjectID</td>
             <td> @project.Address</td>
             <td> @project.APN</td>
             <td> @project.ProjectName</td>
