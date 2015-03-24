@@ -2,17 +2,44 @@
 
 @model web_mvc.ViewModels.ProjectIndex
 
-@{
-    ViewBag.Title = "Projects List";
-}
-
 @Html.AntiForgeryToken()
 
-<h2>List of Projects</h2>
+<h1>Projects</h1>
 
-<table>
+<div class="btn-toolbar">
+    <div class="btn-group">
+        <a href="@Url.Action("New")" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-plus"></i>New Project</a>
+   </div>
+    <div class="btn btn-group pull-right">
+        @if (Model.Projects.HasPreviousPage)
+        {
+
+            <a href="@Url.Action("Index", new {page = Model.Projects.PreviousPage})" class="btn btn-primary btn-sm">
+                <i class="glyphicon glyphicon-chevron-left"></i>Previous Page</a>
+        }
+        else
+        {
+            <a href="#" class="btn btn-default btn-disabled btn-sm">
+                <i class="glyphicon glyphicon-chevron-left"></i>Previous Page</a>
+        }
+    </div>
+    <div class="btn btn-group pull-right">
+        @if (Model.Projects.HasNextPage)
+        {
+            <a href="@Url.Action("Index", new {page = Model.Projects.NextPage})" class="btn btn-primary btn-sm">
+                Next Page<i class="glyphicon glyphicon-chevron-right"></i></a>
+        }
+        else
+        {
+            <a href="#" class="btn btn-default btn-disabled btn-sm">Next Page
+                Next Page<i class="glyphicon glyphicon-chevron-right"></i></a>
+        }
+    </div>
+</div>
+
+<table class="table table-striped">
     <thead>
-        <tr>
+        <tr>  @*this can be done in a loop when I write a method that spits out property names as a property*@
             <th><a href="@Url.Action("Index", new {page = Model.Projects.Page, SortOrder=Model.SortOrder, SortBy="Address"})">Address</a></th>
             <th><a href="@Url.Action("Index", new {page = Model.Projects.Page, SortOrder=Model.SortOrder, SortBy="APN"})">APN</a></th>
             <th><a href="@Url.Action("Index", new {page = Model.Projects.Page, SortOrder=Model.SortOrder, SortBy="ProjectName"})">Project Name</a></th>
@@ -29,31 +56,10 @@
             <td> @project.ProjectName</td>
             <td> @project.PlanCheckNumber</td>
             <td> @project.Notes</td>
+            <td><a href="@Url.Action("Edit", new {project.ProjectID})" class="btn btn-primary btn-xs">Edit<i class="glyphicon glyphicon-edit"></i></a></td>
         </tr>
     }
 
 </table>
     
 
-@if(Model.Projects.HasPreviousPage)
-    {
-    
-    <a href="@Url.Action("Index", new {page = Model.Projects.PreviousPage})">
-        Previous Page
-    </a>
-    }
- else
-    {
-    <a href="#">No Previous Page</a>
-    }
-
-@if (Model.Projects.HasNextPage)
-{
-    <a href="@Url.Action("Index", new {page = Model.Projects.NextPage})">
-        Next Page
-    </a>
-}
-else
-{
-    <a href="#">No Next Page</a>
-}

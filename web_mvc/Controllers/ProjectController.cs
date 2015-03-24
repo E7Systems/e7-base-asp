@@ -11,6 +11,7 @@ using web_mvc.ViewModels;
 namespace web_mvc.Controllers
 {
     //[Authorize(Roles="admin")]
+    //[ValidateAntiForgeryToken]  //move this to global.asax when security is turned on
     public class ProjectController : Controller
     {
         private static readonly ILog m_logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -84,5 +85,18 @@ namespace web_mvc.Controllers
         } 
         #endregion
 
+        public ActionResult New()
+        {
+            return Content("New Project");
+            //return View("Form", new ProjectForm
+            //{
+            //    IsNew = true
+            //});
+        }
+
+        public ActionResult Edit()
+        {
+            return Content("Edit Project");
+        }
     }
 }

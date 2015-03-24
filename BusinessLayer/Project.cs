@@ -1,15 +1,22 @@
 ﻿using System.Text;
+using System.ComponentModel.DataAnnotations;
 
 namespace Rsff.BusinessLayer
 {
     //Project Entity
     public class Project
     {
+        [Required]
         public int ProjectID { get; set; }
+        [Required, MaxLength(255)]
         public string Address { get; set; }
+        [Required, MaxLength(255)]
         public string APN { get; set; }
+        [Required, MaxLength(255)]
         public string ProjectName { get; set; }
+        [Required]
         public int PlanCheckNumber { get; set; }
+        [Required, MaxLength(255)]
         public string Notes { get; set; }
 
         #region ToString() override

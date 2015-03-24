@@ -27,6 +27,11 @@ namespace web_mvc
                 url: string.Empty,  //empty string means match anything not explicitly mapped elsewhere
                 defaults: new { controller = "Login", action = "Index" }
             );
+
+            routes.MapRoute(
+                name: "Default",
+                url: "{controller}/{action}/{id}",
+                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional });
         }
     }
 }
