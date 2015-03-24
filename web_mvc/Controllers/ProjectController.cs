@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using web_mvc.Infrastructure;
 using web_mvc.ViewModels;
+using System.Linq;
 
 namespace web_mvc.Controllers
 {
@@ -16,7 +17,7 @@ namespace web_mvc.Controllers
 
         // GET: /Projects
         // Displays a page of projects
-        public ActionResult Index(int page = 1)
+        public ActionResult Index(int page = 1, string sortOrder="Asc", string sortBy="PlanCheckNumber")
         {
 
             ProjectsBusinessLogic projectsBusinessLogic = new ProjectsBusinessLogic();
@@ -27,10 +28,25 @@ namespace web_mvc.Controllers
             Tuple<List<Project>, int> pagedDataTuple = projectsBusinessLogic.GetProjectPage(page, PROJECTS_PER_PAGE);
 
             List<Project> pageOfProjects = pagedDataTuple.Item1;
+            
+            //sort data here, do not bother going back to db
+            //if descending order is specifically requested, do that.  Otherwise default to ascending
+            if (sortOrder == "Desc")
+            {
+                pageOfProjects = pageOfProjects.OrderByDescending(project => project.PlanCheckNumber).ToList();
+                sortOrder = "Asc";
+            }
+            else
+            {
+                pageOfProjects = pageOfProjects.OrderBy(project => project.PlanCheckNumber).ToList();
+                sortOrder = "Desc";
+            }
+
             int totalProjectsRecordCount = pagedDataTuple.Item2;
             m_logger.DebugFormat("Current Page: {0}, Rows per page: {1}, totalProjectsRecordCount: {2}", page, PROJECTS_PER_PAGE, totalProjectsRecordCount);
 
             ProjectIndex projectIndex = new ProjectIndex();
+            projectIndex.SortOrder = sortOrder;
 
             //stuff page of Projects into a ViewModel
             projectIndex.Projects = new PagedData<Project>(pageOfProjects, totalProjectsRecordCount, page, PROJECTS_PER_PAGE);
@@ -38,5 +54,7 @@ namespace web_mvc.Controllers
             //send it to be displayed in the view
             return View(projectIndex);
         }
+
+        public Comparison<Project> projectSort { get; set; }
     }
 }
