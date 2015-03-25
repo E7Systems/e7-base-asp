@@ -155,5 +155,25 @@ namespace web_mvc.Controllers
             return View(form);
         }
         #endregion
+
+        #region Delete Action (Post)
+        [HttpPost]
+        public ActionResult Delete(int projectID)
+        {
+            ProjectsBusinessLogic projectsBusinessLogic = new ProjectsBusinessLogic();
+            bool success = projectsBusinessLogic.SoftDeleteProject(projectID);
+            m_logger.DebugFormat("projectsBusinessLogic.SoftDeleteProject returned : {0}", success);
+            if (success)
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                ModelState.AddModelError("Address", "Deleting Project Failed");
+                return View();
+            }
+        } 
+        #endregion
+    
     }
 }

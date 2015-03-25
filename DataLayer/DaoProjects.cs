@@ -178,5 +178,29 @@ namespace Rsff.DataLayer
             }
         } 
         #endregion
+
+        public int SoftDeleteProject(int projectID)
+        {
+            DaoProjects dao = new DaoProjects();
+            const string PROC = "[dbo].[up_Project_SoftDelete]";
+            using (SqlConnection conn = new SqlConnection(m_ConnectionString))
+            {
+                using (SqlDataAdapter adapter = new SqlDataAdapter())
+                {
+                    using (SqlCommand command = new SqlCommand())
+                    {
+                        command.CommandType = System.Data.CommandType.StoredProcedure;
+                        command.CommandText = PROC;
+                        command.Parameters.AddWithValue("@ProjectID", projectID);
+                        conn.Open();
+                        command.Connection = conn;
+                        adapter.UpdateCommand = command;
+                        object rowsAffected = adapter.UpdateCommand.ExecuteNonQuery();
+                        conn.Close();
+                        return Convert.ToInt32(rowsAffected);
+                    }
+                }
+            }
+        }
     }
 }

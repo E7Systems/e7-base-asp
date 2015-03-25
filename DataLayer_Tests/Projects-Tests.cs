@@ -92,5 +92,18 @@ namespace DataLayer_Tests
         {
             Assert.Fail();
         }
+
+        [Test]
+        public void TestGetProjectByProjectID()
+        {
+            Assert.Fail();
+                
+        }
+
+        [Test]
+        public void TestProjectSoftDelete()
+        {
+            Assert.Fail();
+        }
     }
 }

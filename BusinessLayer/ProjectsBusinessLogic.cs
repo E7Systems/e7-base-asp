@@ -140,5 +140,13 @@ namespace Rsff.BusinessLayer
             return dao.GetProjectsCount();
         }
 
+        public bool SoftDeleteProject(int projectID)
+        {
+            m_logger.DebugFormat("SoftDeleteProject is deleting projectID: {0}", projectID);
+            DaoProjects dao = new DaoProjects();
+            int rowsAffected = dao.SoftDeleteProject(projectID);
+            return rowsAffected == 1;
+        }
+
     }
 }

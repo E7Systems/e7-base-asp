@@ -46,7 +46,7 @@ namespace BusinessLayer_Tests
         }
         
         //obselete, but used in unit testing
-        //either move this into a unit testing db or delete it
+        //move this into unit testing db 
         [Test]
         public void TestGetProjectCount()
         {
@@ -68,7 +68,14 @@ namespace BusinessLayer_Tests
             Assert.Fail();
         }
 
+        [Test]
         public void TestProjectUpdate()
+        {
+            Assert.Fail();
+        }
+
+        [Test]
+        public void TestProjectSoftDelete()
         {
             Assert.Fail();
         }

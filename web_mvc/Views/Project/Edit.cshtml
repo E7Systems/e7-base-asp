@@ -5,10 +5,10 @@
 @using (Html.BeginForm("Edit", "Project"))
 {
 
-    @Html.AntiForgeryToken();
-
-    @Html.HiddenFor( mdl => mdl.Project.ProjectID)
+    @Html.AntiForgeryToken();   
     
+    @Html.HiddenFor(mdl => mdl.Project.ProjectID)
+
     <div class="row">
         <div class="col col-lg-8">
             @Html.ValidationSummary()
@@ -21,11 +21,11 @@
                 @Html.TextBoxFor(mdl => mdl.Project.APN, new { @class = "form-control" })
             </div>
             <div class="form-group">
-                @Html.LabelFor(mdl => mdl.Project.ProjectName, "Project Name")
+                @Html.LabelFor(mdl => mdl.Project.ProjectName)
                 @Html.TextBoxFor(mdl => mdl.Project.ProjectName, new { @class = "form-control" })
             </div>
             <div class="form-group">
-                @Html.LabelFor(mdl => mdl.Project.PlanCheckNumber, "Plan Check Number")
+                @Html.LabelFor(mdl => mdl.Project.PlanCheckNumber)
                 @Html.TextBoxFor(mdl => mdl.Project.PlanCheckNumber, new { @class = "form-control" })
             </div>
             <div class="form-group">

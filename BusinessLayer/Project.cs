@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
 
 namespace Rsff.BusinessLayer
 {
@@ -12,9 +13,9 @@ namespace Rsff.BusinessLayer
         public string Address { get; set; }
         [Required, MaxLength(255)]
         public string APN { get; set; }
-        [Required, MaxLength(255)]
+        [Required, MaxLength(255),DisplayName("Project Name")]
         public string ProjectName { get; set; }
-        [Required]
+        [Required,DisplayName("Plan Check Number")]
         public int PlanCheckNumber { get; set; }
         [Required, MaxLength(255)]
         public string Notes { get; set; }
