@@ -54,5 +54,23 @@ namespace BusinessLayer_Tests
             int projectCount = projectsBusinessLogic.GetProjectsCount();
             Assert.Greater(projectCount, 0);
         }
+
+        [Test]
+        public void TestGetProjectByProjectID()
+        {
+            //test not yet written
+            Assert.Fail();
+        }
+
+        [Test]
+        public void TestProjectInsert()
+        {
+            Assert.Fail();
+        }
+
+        public void TestProjectUpdate()
+        {
+            Assert.Fail();
+        }
     }
 }

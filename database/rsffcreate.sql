@@ -268,48 +268,6 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-CREATE VIEW [dbo].[vw_aspnet_Applications]
-  AS SELECT [dbo].[aspnet_Applications].[ApplicationName], [dbo].[aspnet_Applications].[LoweredApplicationName], [dbo].[aspnet_Applications].[ApplicationId], [dbo].[aspnet_Applications].[Description]
-  FROM [dbo].[aspnet_Applications]
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER OFF
-GO
-CREATE PROCEDURE [dbo].[up_Projects_Get_List]
-AS
-Select * from Projects
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER OFF
-GO
-CREATE PROCEDURE [dbo].[up_Project_Insert]
-@Address varchar(255),
-@APN varchar(255),
-@Notes varchar(MAX),
-@PlanCheckNumber int,
-@ProjectName varchar(255)
-AS
-INSERT INTO Projects
-				(Address,  APN,  Notes,  PlanCheckNumber,  ProjectName)
-VALUES			(@Address, @APN, @Notes, @PlanCheckNumber, @ProjectName);   
-SELECT SCOPE_IDENTITY();
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER OFF
-GO
-CREATE PROCEDURE [dbo].[up_Project_Get_By_ProjectID]
-@ProjectID int
-AS
-Select * from Projects
-Where ProjectID=@ProjectID;
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER OFF
-GO
 CREATE PROCEDURE [dbo].[aspnet_WebEvent_LogEvent]
         @EventId         char(32),
         @EventTimeUtc    datetime,
@@ -366,6 +324,94 @@ BEGIN
         @Details
     )
 END
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+CREATE VIEW [dbo].[vw_aspnet_Applications]
+  AS SELECT [dbo].[aspnet_Applications].[ApplicationName], [dbo].[aspnet_Applications].[LoweredApplicationName], [dbo].[aspnet_Applications].[ApplicationId], [dbo].[aspnet_Applications].[Description]
+  FROM [dbo].[aspnet_Applications]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+CREATE PROCEDURE [dbo].[up_Projects_Get_List]
+AS
+Select * from Projects
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+CREATE PROCEDURE [dbo].[up_Project_Update]
+@ProjectID int,
+@Address varchar(255),
+@APN varchar(255),
+@Notes varchar(MAX),
+@PlanCheckNumber int,
+@ProjectName varchar(255)
+AS
+UPDATE Projects
+SET Address=@Address,  APN=@APN,  Notes=@Notes,  PlanCheckNumber=@PlanCheckNumber,  ProjectName=@ProjectName
+WHERE ProjectID = @ProjectID
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+CREATE PROCEDURE [dbo].[up_Project_Insert]
+@Address varchar(255),
+@APN varchar(255),
+@Notes varchar(MAX),
+@PlanCheckNumber int,
+@ProjectName varchar(255)
+AS
+INSERT INTO Projects
+				(Address,  APN,  Notes,  PlanCheckNumber,  ProjectName)
+VALUES			(@Address, @APN, @Notes, @PlanCheckNumber, @ProjectName);   
+SELECT SCOPE_IDENTITY();
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+CREATE PROCEDURE [dbo].[up_Project_Get_TotalCount]
+AS
+Select COUNT(*) from Projects
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+CREATE PROCEDURE [dbo].[up_Project_Get_Page]
+    @rowFrom INT,
+    @rowTo INT
+AS
+
+--ProjectID not strictly necessary but it helps in verifying paging logic is working correctly
+SELECT * FROM
+(
+SELECT ROW_NUMBER() OVER (ORDER BY ProjectID ) AS rowIndex, ProjectID, Address, APN, Notes, PlanCheckNumber, ProjectName
+FROM Projects
+)
+tbl
+WHERE rowIndex BETWEEN @rowFrom AND @rowTo
+
+--get a count of all rows in the projects table and send it back via OUTPUT
+--this avoids a second expensive trip back to the database to get total row count
+SELECT COUNT(*) FROM Projects
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+CREATE PROCEDURE [dbo].[up_Project_Get_By_ProjectID]
+@ProjectID int
+AS
+Select * from Projects
+Where ProjectID=@ProjectID;
 GO
 SET ANSI_NULLS ON
 GO
@@ -3675,161 +3721,6 @@ REFERENCES [dbo].[aspnet_Roles] ([RoleId])
 GO
 ALTER TABLE [dbo].[aspnet_UsersInRoles]  WITH CHECK ADD FOREIGN KEY([UserId])
 REFERENCES [dbo].[aspnet_Users] ([UserId])
-GO
-
-
---genesis data, create admin role and 1st admin user (dneary_admin) so you can login and create others
-
---create membership application
-INSERT INTO [dbo].[aspnet_Applications]
-           ([ApplicationName]
-           ,[LoweredApplicationName]
-           ,[ApplicationId]
-           ,[Description])
-     VALUES
-           ('RsffWeb'
-           ,'rsffweb'
-           ,'3733F5F6-3615-4713-B910-D0446B7AE622'
-           ,null)
-
-GO
-
---add 1st user (dneary_admin)
-INSERT INTO [dbo].[aspnet_Users]
-           ([ApplicationId]
-           ,[UserId]
-           ,[UserName]
-           ,[LoweredUserName]
-           ,[MobileAlias]
-           ,[IsAnonymous]
-           ,[LastActivityDate])
-     VALUES
-           ('3733F5F6-3615-4713-B910-D0446B7AE622'
-           ,'8320518B-7F66-46F0-8DB1-2558093E5541'
-           ,'dneary_admin'
-           ,'dneary_admin'
-           ,null
-           ,0
-           ,getdate())
-
-GO
-
---add dneary_admin user to application
-INSERT INTO [dbo].[aspnet_Membership]
-           ([ApplicationId]
-           ,[UserId]
-           ,[Password]
-           ,[PasswordFormat]
-           ,[PasswordSalt]
-           ,[MobilePIN]
-           ,[Email]
-           ,[LoweredEmail]
-           ,[PasswordQuestion]
-           ,[PasswordAnswer]
-           ,[IsApproved]
-           ,[IsLockedOut]
-           ,[CreateDate]
-           ,[LastLoginDate]
-           ,[LastPasswordChangedDate]
-           ,[LastLockoutDate]
-           ,[FailedPasswordAttemptCount]
-           ,[FailedPasswordAttemptWindowStart]
-           ,[FailedPasswordAnswerAttemptCount]
-           ,[FailedPasswordAnswerAttemptWindowStart]
-           ,[Comment])
-     VALUES  
-           ('3733F5F6-3615-4713-B910-D0446B7AE622'
-           ,'8320518B-7F66-46F0-8DB1-2558093E5541'
-           ,'tuF7ypoUU25FeBq4RzJnZLoP2XE=' 
-           ,1
-           ,'jrjAoW03lYM67cdAYvQQ8g=='     --make sure this salt matches the password
-           ,null
-           ,'dneary_admin@e7systems.com'
-           ,'dneary_admin@e7systems.com'
-           ,'dneary_admin@e7systems.com'
-           ,'dneary_admin@e7systems.com'
-           ,1
-           ,0
-           ,getdate()
-           ,getdate()
-           ,getdate()
-           ,getdate()
-           ,0
-           ,getdate()
-           ,0
-           ,getdate()
-           ,null)
-
-GO
-
---add an admin role
-INSERT INTO [dbo].[aspnet_Roles]
-           ([ApplicationId]
-           ,[RoleId]
-           ,[RoleName]
-           ,[LoweredRoleName]
-           ,[Description])
-     VALUES
-           ('3733F5F6-3615-4713-B910-D0446B7AE622'
-           ,'0580AE01-628B-43D7-886E-5F8F40679A95'
-           ,'admin'
-           ,'admin'
-           ,null)
-
-GO
-
---add the dneary_admin user to the admin role
-INSERT INTO [dbo].[aspnet_UsersInRoles]
-           ([UserId]
-           ,[RoleId])
-     VALUES
-           ('8320518B-7F66-46F0-8DB1-2558093E5541'
-           ,'0580AE01-628B-43D7-886E-5F8F40679A95')
-
-GO
-
-INSERT INTO [dbo].[aspnet_SchemaVersions]
-           ([Feature]
-           ,[CompatibleSchemaVersion]
-           ,[IsCurrentVersion])
-     VALUES
-           ('common'
-           ,'1'
-           ,1)
-
-GO
-
-INSERT INTO [dbo].[aspnet_SchemaVersions]
-           ([Feature]
-           ,[CompatibleSchemaVersion]
-           ,[IsCurrentVersion])
-     VALUES
-           ('membership'
-           ,'1'
-           ,1)
-
-GO
-
-INSERT INTO [dbo].[aspnet_SchemaVersions]
-           ([Feature]
-           ,[CompatibleSchemaVersion]
-           ,[IsCurrentVersion])
-     VALUES
-           ('profile'
-           ,'1'
-           ,1)
-
-GO
-
-INSERT INTO [dbo].[aspnet_SchemaVersions]
-           ([Feature]
-           ,[CompatibleSchemaVersion]
-           ,[IsCurrentVersion])
-     VALUES
-           ('role manager'
-           ,'1'
-           ,1)
-
 GO
 
 

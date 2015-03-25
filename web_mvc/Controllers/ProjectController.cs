@@ -86,7 +86,7 @@ namespace web_mvc.Controllers
         #endregion
 
         #region Create Action (Get)
-        //GET /project/create
+        //GET /Project/Create
         public ActionResult Create()
         {
             return View(new ProjectCreate());
@@ -118,7 +118,42 @@ namespace web_mvc.Controllers
         } 
         #endregion
 
-        
-    
+        #region Edit Action (Get)
+        //GET /Project/Edit/{id}
+        public ActionResult Edit(int projectID)
+        {
+            ProjectsBusinessLogic projectsBusinessLogic = new ProjectsBusinessLogic();
+            Project project = projectsBusinessLogic.GetProjectByProjectID(projectID);
+            ProjectEdit projectEdit = new ProjectEdit();
+            projectEdit.Project = project;
+
+            return View(projectEdit);
+        }
+        #endregion
+
+        #region Edit Action (Post)
+        [HttpPost]
+        public ActionResult Edit(ProjectEdit form)
+        {
+            if (ModelState.IsValid)
+            {
+                m_logger.DebugFormat("Edit Action, attempting to update new project with data values: {0}", form.Project.ToString());
+                ProjectsBusinessLogic projectsBusinessLogic = new ProjectsBusinessLogic();
+                bool success = projectsBusinessLogic.UpdateProject(form.Project.ProjectID,form.Project.Address, form.Project.APN, form.Project.Notes, form.Project.PlanCheckNumber, form.Project.ProjectName);
+                m_logger.DebugFormat("projectsBusinessLogic.InsertProject returned : {0}", success);
+                if (success)
+                {
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    ModelState.AddModelError("Address", "Saving new Project Failed");
+                    return View(form);
+                }
+            }
+
+            return View(form);
+        }
+        #endregion
     }
 }

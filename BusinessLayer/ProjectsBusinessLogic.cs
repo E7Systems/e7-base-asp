@@ -101,12 +101,35 @@ namespace Rsff.BusinessLayer
         } 
         #endregion
 
+        public Project GetProjectByProjectID(int projectID)
+        {
+            DaoProjects dao = new DaoProjects();
+            DataRow row = dao.GetProjectByProjectID(projectID);
+            Project project = new Project();
+            project.ProjectID = Convert.ToInt32(row["ProjectID"]);
+            project.Address = Convert.ToString(row["Address"]);
+            project.APN = Convert.ToString(row["APN"]);
+            project.Notes = Convert.ToString(row["Notes"]);
+            project.PlanCheckNumber = Convert.ToInt32(row["PlanCheckNumber"]);
+            project.ProjectName = Convert.ToString(row["ProjectName"]);
+            return project;
+        }
+
+        #region InsertProject
         //inserts project.  returns true on success or false on fail
         public bool InsertProject(string address, string APN, string notes, int planCheckNumber, string projectName)
         {
             DaoProjects dao = new DaoProjects();
             int rowID = dao.InsertProject(address, APN, notes, planCheckNumber, projectName);
             return rowID > 0;
+        } 
+        #endregion
+
+        public bool UpdateProject(int projectID, string address, string APN, string notes, int planCheckNumber, string projectName)
+        {
+            DaoProjects dao = new DaoProjects();
+            int rowsAffected = dao.UpdateProject(projectID, address, APN, notes, planCheckNumber, projectName);
+            return rowsAffected == 1;
         }
 
         //move this into unit testing project

@@ -1,0 +1,50 @@
+﻿@model web_mvc.ViewModels.ProjectEdit
+
+<h1>Edit</h1>
+
+@using (Html.BeginForm("Edit", "Project"))
+{
+
+    @Html.AntiForgeryToken();
+
+    @Html.HiddenFor( mdl => mdl.Project.ProjectID)
+    
+    <div class="row">
+        <div class="col col-lg-8">
+            @Html.ValidationSummary()
+            <div class="form-group">
+                @Html.LabelFor(mdl => mdl.Project.Address)
+                @Html.TextBoxFor(mdl => mdl.Project.Address, new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(mdl => mdl.Project.APN)
+                @Html.TextBoxFor(mdl => mdl.Project.APN, new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(mdl => mdl.Project.ProjectName, "Project Name")
+                @Html.TextBoxFor(mdl => mdl.Project.ProjectName, new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(mdl => mdl.Project.PlanCheckNumber, "Plan Check Number")
+                @Html.TextBoxFor(mdl => mdl.Project.PlanCheckNumber, new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(mdl => mdl.Project.Notes)
+                @Html.TextBoxFor(mdl => mdl.Project.Notes, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col col-lg-4">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    Project Actions
+                </div>
+                <div class="panel-body">
+                    @*<input type="submit" value=@(Model.IsNew?"Save Project":"Update Project") class="btn btn-success btn-sm" />*@
+                    <input type="submit" value="Save Project" class="btn btn-success btn-sm" />
+                    <a href="@Url.Action("Index")">Or Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+

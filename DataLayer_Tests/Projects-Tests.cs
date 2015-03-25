@@ -86,5 +86,11 @@ namespace DataLayer_Tests
             Assert.AreEqual(rowCount, Convert.ToInt32(ds.Tables[1].Rows[0][0]));
         } 
         #endregion
+    
+        [Test]
+        public void TestProjectUpdate()
+        {
+            Assert.Fail();
+        }
     }
 }
