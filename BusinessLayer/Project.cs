@@ -23,12 +23,12 @@ namespace Rsff.BusinessLayer
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("ProjectID = {0}", this.ProjectID);
-            sb.AppendFormat("Address = {0}", this.Address);
-            sb.AppendFormat("APN = {0}", this.APN);
-            sb.AppendFormat("ProjectName = {0}", this.ProjectName);
-            sb.AppendFormat("PlanCheckNumber = {0}", this.PlanCheckNumber);
-            sb.AppendFormat("ProjectID = {0}", this.Notes);
+            sb.AppendFormat("ProjectID = {0}, ", this.ProjectID);
+            sb.AppendFormat("Address = {0}, ", this.Address);
+            sb.AppendFormat("APN = {0}, ", this.APN);
+            sb.AppendFormat("ProjectName = {0}, ", this.ProjectName);
+            sb.AppendFormat("PlanCheckNumber = {0}, ", this.PlanCheckNumber);
+            sb.AppendFormat("ProjectID = {0}, ", this.Notes);
             return sb.ToString(); 
         #endregion
         }

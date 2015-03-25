@@ -60,7 +60,8 @@ namespace Rsff.BusinessLayer
             return projects;
         } 
         #endregion
-    
+
+        #region GetProjectPage
         //gets a single page of data
         public Tuple<List<Project>, int> GetProjectPage(int currentPage, int rowsPerPage)
         {
@@ -97,9 +98,18 @@ namespace Rsff.BusinessLayer
 
             return Tuple.Create<List<Project>, int>(projects, rowCount);
 
+        } 
+        #endregion
+
+        //inserts project.  returns true on success or false on fail
+        public bool InsertProject(string address, string APN, string notes, int planCheckNumber, string projectName)
+        {
+            DaoProjects dao = new DaoProjects();
+            int rowID = dao.InsertProject(address, APN, notes, planCheckNumber, projectName);
+            return rowID > 0;
         }
 
-        //obselete:  get rid of this and the stored proc as well
+        //move this into unit testing project
         //gets a count of the total number of projects in the db
         public int GetProjectsCount()
         {
@@ -107,9 +117,5 @@ namespace Rsff.BusinessLayer
             return dao.GetProjectsCount();
         }
 
-        public void foo()
-        {
-            //Tuple
-        }
     }
 }

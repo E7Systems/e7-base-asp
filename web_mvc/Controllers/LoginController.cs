@@ -10,12 +10,15 @@ namespace web_mvc.Controllers
     {
         private static readonly ILog m_logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        #region Index Action (Get)
         // GET: /login
         public ActionResult Index()
         {
             return View(new LoginIndex());
-        }
+        } 
+        #endregion
 
+        #region Index Action (Post)
         [HttpPost]
         public ActionResult Index(LoginIndex form)
         {
@@ -51,6 +54,7 @@ namespace web_mvc.Controllers
                 m_logger.Debug("ModelState.IsValid=false");
                 return View(form);
             }
-        }
+        } 
+        #endregion
     }
 }

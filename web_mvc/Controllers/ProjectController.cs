@@ -17,12 +17,12 @@ namespace web_mvc.Controllers
         private static readonly ILog m_logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private const int PROJECTS_PER_PAGE = 10;
 
-        #region Index Action
+        #region Index Action (Get)
         // GET: /Projects
         // Displays a page of projects
         public ActionResult Index(int page = 1, string sortOrder = "Asc", string sortBy = "ProjectName")
         {
-
+            m_logger.DebugFormat("Entering Index Action");
             ProjectsBusinessLogic projectsBusinessLogic = new ProjectsBusinessLogic();
 
             #region Get Page of Data From Databasae
@@ -85,18 +85,38 @@ namespace web_mvc.Controllers
         } 
         #endregion
 
-        public ActionResult New()
+        #region Create Action (Get)
+        //GET /project/create
+        public ActionResult Create()
         {
-            return Content("New Project");
-            //return View("Form", new ProjectForm
-            //{
-            //    IsNew = true
-            //});
-        }
+            return View(new ProjectCreate());
+        } 
+        #endregion
 
-        public ActionResult Edit()
+        #region Create Action (Post)
+        [HttpPost]
+        public ActionResult Create(ProjectCreate form)
         {
-            return Content("Edit Project");
-        }
+            if (ModelState.IsValid)
+            {
+                m_logger.DebugFormat("Create Action, attempting to insert new project with data values: {0}", form.Project.ToString());
+                ProjectsBusinessLogic projectsBusinessLogic = new ProjectsBusinessLogic();
+                bool success = projectsBusinessLogic.InsertProject(form.Project.Address, form.Project.APN, form.Project.Notes, form.Project.PlanCheckNumber, form.Project.ProjectName);
+                m_logger.DebugFormat("projectsBusinessLogic.InsertProject returned : {0}", success);
+                if (success)
+                {
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    ModelState.AddModelError("Address", "Saving new Project Failed");
+                    return View(form);
+                }
+            }
+
+            return View(form);
+        } 
+        #endregion
+
     }
 }
