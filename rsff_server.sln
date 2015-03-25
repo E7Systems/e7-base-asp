@@ -3,28 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "web", "web\", "{1F7F1EF7-1B9A-49EB-967E-43C74B2411FE}"
-	ProjectSection(WebsiteProperties) = preProject
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
-		ProjectReferences = "{B4AFA325-8266-4389-A69A-AA058F78BE9F}|BusinessLayer.dll;{D6321A70-1C34-4536-9DD4-431B06F99D0C}|DataLayer.dll;"
-		Debug.AspNetCompiler.VirtualPath = "/web"
-		Debug.AspNetCompiler.PhysicalPath = "web\"
-		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\web\"
-		Debug.AspNetCompiler.Updateable = "true"
-		Debug.AspNetCompiler.ForceOverwrite = "true"
-		Debug.AspNetCompiler.FixedNames = "false"
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.VirtualPath = "/web"
-		Release.AspNetCompiler.PhysicalPath = "web\"
-		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\web\"
-		Release.AspNetCompiler.Updateable = "true"
-		Release.AspNetCompiler.ForceOverwrite = "true"
-		Release.AspNetCompiler.FixedNames = "false"
-		Release.AspNetCompiler.Debug = "False"
-		VWDPort = "49410"
-		SlnRelativePath = "web\"
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLayer", "BusinessLayer\BusinessLayer.csproj", "{B4AFA325-8266-4389-A69A-AA058F78BE9F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataLayer", "DataLayer\DataLayer.csproj", "{D6321A70-1C34-4536-9DD4-431B06F99D0C}"
@@ -47,16 +25,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1F7F1EF7-1B9A-49EB-967E-43C74B2411FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1F7F1EF7-1B9A-49EB-967E-43C74B2411FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1F7F1EF7-1B9A-49EB-967E-43C74B2411FE}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{1F7F1EF7-1B9A-49EB-967E-43C74B2411FE}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{1F7F1EF7-1B9A-49EB-967E-43C74B2411FE}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{1F7F1EF7-1B9A-49EB-967E-43C74B2411FE}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{1F7F1EF7-1B9A-49EB-967E-43C74B2411FE}.Release|Any CPU.Build.0 = Debug|Any CPU
-		{1F7F1EF7-1B9A-49EB-967E-43C74B2411FE}.Release|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{1F7F1EF7-1B9A-49EB-967E-43C74B2411FE}.Release|Mixed Platforms.Build.0 = Debug|Any CPU
-		{1F7F1EF7-1B9A-49EB-967E-43C74B2411FE}.Release|x86.ActiveCfg = Debug|Any CPU
 		{B4AFA325-8266-4389-A69A-AA058F78BE9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B4AFA325-8266-4389-A69A-AA058F78BE9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4AFA325-8266-4389-A69A-AA058F78BE9F}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU

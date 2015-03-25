@@ -10,7 +10,7 @@
     
     <div class="row">
         <div class="col col-lg-8">
-            @Html.ValidationSummary();
+            @Html.ValidationSummary()
             <div class="form-group">
                 @Html.LabelFor(mdl => mdl.Project.Address)
                 @Html.TextBoxFor(mdl => mdl.Project.Address, new {@class= "form-control" })
@@ -20,11 +20,11 @@
                 @Html.TextBoxFor(mdl => mdl.Project.APN, new { @class = "form-control" })
             </div>
             <div class="form-group">
-                @Html.LabelFor(mdl => mdl.Project.ProjectName)
+                @Html.LabelFor(mdl => mdl.Project.ProjectName,"Project Name")
                 @Html.TextBoxFor(mdl => mdl.Project.ProjectName, new { @class = "form-control" })
             </div>
             <div class="form-group">
-                @Html.LabelFor(mdl => mdl.Project.PlanCheckNumber);
+                @Html.LabelFor(mdl => mdl.Project.PlanCheckNumber,"Plan Check Number")
                 @Html.TextBoxFor(mdl => mdl.Project.PlanCheckNumber, new { @class = "form-control" })
             </div>
             <div class="form-group">
