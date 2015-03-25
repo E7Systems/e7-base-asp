@@ -3725,7 +3725,7 @@ GO
 
 
 --put the database schema version in the db
-INSERT INTO Parameters(ParameterName, [Value]) Values('DBVersion', '1.0.0.0')
+INSERT INTO Parameters(ParameterName, [Value]) Values('DBVersion', '1.0.0.1')
 GO
 
 --/\*.*?\*/.*?\n
