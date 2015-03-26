@@ -35,33 +35,6 @@ namespace Rsff.DataLayer
         } 
         #endregion
 
-        #region GetAllProjectsDataTable
-        //gets a list of all projects.  
-        //returns them in a data table
-        public DataTable GetAllProjectsDataTable()
-        {
-            const string PROC = "[dbo].[up_Projects_Get_List]";
-            DataSet ds = new DataSet();
-            using (SqlConnection conn = new SqlConnection(m_ConnectionString))
-            {
-                using (SqlDataAdapter adapter = new SqlDataAdapter())
-                {
-                    using (SqlCommand command = new SqlCommand())
-                    {
-                        command.CommandType = System.Data.CommandType.StoredProcedure;
-                        command.CommandText = PROC;
-                        conn.Open();
-                        command.Connection = conn;
-                        adapter.SelectCommand = command;
-                        adapter.Fill(ds);
-                        conn.Close();
-                        return ds.Tables[0];
-                    }
-                }
-            }
-        } 
-        #endregion
-
         #region GetProjectPage
         //returns 2 data tables
         //1st data table contains a page of data
@@ -93,7 +66,7 @@ namespace Rsff.DataLayer
         }
         #endregion
 
-        //obselete, move this to the unit testing db
+        //move this to the unit testing db
         public int GetProjectsCount()
         {
             const string PROC = "[dbo].[up_Project_Get_TotalCount]";
@@ -179,6 +152,7 @@ namespace Rsff.DataLayer
         } 
         #endregion
 
+        #region SoftDeleteProject
         public int SoftDeleteProject(int projectID)
         {
             DaoProjects dao = new DaoProjects();
@@ -201,6 +175,34 @@ namespace Rsff.DataLayer
                     }
                 }
             }
-        }
+        } 
+        #endregion
+
+        #region SearchProjectByPlanCheckNumber
+        public DataSet SearchProjectByPlanCheckNumber(int planCheckNumber)
+        {
+            const string PROC = "[dbo].[up_Project_Search_By_PlanCheckNumber]";
+            DataSet ds = new DataSet();
+            using (SqlConnection conn = new SqlConnection(m_ConnectionString))
+            {
+                using (SqlDataAdapter adapter = new SqlDataAdapter())
+                {
+                    using (SqlCommand command = new SqlCommand())
+                    {
+                        command.CommandType = System.Data.CommandType.StoredProcedure;
+                        command.CommandText = PROC;
+                        command.Parameters.AddWithValue("@planCheckNumber", planCheckNumber);
+                        conn.Open();
+                        command.Connection = conn;
+                        adapter.SelectCommand = command;
+                        adapter.Fill(ds);
+                        conn.Close();
+                        return ds;
+                    }
+                }
+            }
+        } 
+        #endregion
+
     }
 }

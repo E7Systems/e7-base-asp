@@ -1,33 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Data;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Rsff.BusinessLayer;
 using System;
+using System.Collections.Generic;
 
 namespace BusinessLayer_Tests
 {
     [TestFixture]
     public class Tests_ProjectsBusinessLogic
     {
-        //TEMPORARY.  Get rid of this test when the sorting code is working 
-        [Test]
-        public void TestGetAllProjectsDataTable()
-        {
-            ProjectsBusinessLogic projectsBusinessLogic = new ProjectsBusinessLogic();
-            DataTable dataTable = projectsBusinessLogic.GetAllProjectsDataTable();
-            //simple test verifies we got back at least some data.
-            Assert.Greater(dataTable.Rows.Count, 0);
-        }
 
-        [Test]
-        public void TestGetAllProjects()
-        {
-            ProjectsBusinessLogic projectsBusinessLogic = new ProjectsBusinessLogic();
-            List<Project> projects = projectsBusinessLogic.GetAllProjects();
-            //simple test verifies we got back at least some data.
-            Assert.Greater(projects.Count, 0);
-        }
-
+        #region TestGetProjectPage
         [Test]
         public void TestGetProjectPage()
         {
@@ -43,9 +25,11 @@ namespace BusinessLayer_Tests
             //verify total count in projects table is correct
             int projectCount = projectsBusinessLogic.GetProjectsCount();
             Assert.AreEqual(projectCount, projectsPage.Item2);
-        }
-        
-        //obselete, but used in unit testing
+        } 
+        #endregion
+
+        #region TestGetProjectCount
+        //used in unit testing
         //move this into unit testing db 
         [Test]
         public void TestGetProjectCount()
@@ -53,7 +37,8 @@ namespace BusinessLayer_Tests
             ProjectsBusinessLogic projectsBusinessLogic = new ProjectsBusinessLogic();
             int projectCount = projectsBusinessLogic.GetProjectsCount();
             Assert.Greater(projectCount, 0);
-        }
+        } 
+        #endregion
 
         [Test]
         public void TestGetProjectByProjectID()
@@ -76,6 +61,12 @@ namespace BusinessLayer_Tests
 
         [Test]
         public void TestProjectSoftDelete()
+        {
+            Assert.Fail();
+        }
+
+        [Test]
+        public void TestSearchByPlanCheckNumber()
         {
             Assert.Fail();
         }

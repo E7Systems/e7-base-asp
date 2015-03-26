@@ -11,56 +11,6 @@ namespace Rsff.BusinessLayer
     {
         private static readonly ILog m_logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        #region GetAllProjectsDataTable
-        //TEMPORARY
-        //returns a datatable of all projects
-        //change this to return a real business object of type List<Project>
-        //after I get the sorting/paging code worked out
-        public DataTable GetAllProjectsDataTable()
-        {
-            DaoProjects dao = new DaoProjects();
-            DataTable tbl = dao.GetAllProjectsDataTable();
-            m_logger.DebugFormat("dao.GetAllProjectsDataTable() returned {0} rows.", tbl.Rows.Count);
-            
-            return tbl;
-        } 
-        #endregion
-
-        #region GetAllProjects
-        //returns a list of all Projects
-        //this is called (or will be called) by the Select Method of the Projects.aspx ObjectDataSource.
-        public List<Project> GetAllProjects()
-        {
-            DaoProjects dao = new DaoProjects();
-            List<Project> projects = new List<Project>();
-
-            //execute query and measure elapsed time.  
-            //this query will eventually return a lot of data and is likely to slow down.
-            System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
-            stopWatch.Start();
-            DataTable tbl = dao.GetAllProjectsDataTable();
-            stopWatch.Stop();
-            TimeSpan elapsedTime = stopWatch.Elapsed;
-
-            m_logger.DebugFormat("dao.GetAllProjectsDataTable() returned {0} rows with elapsed time: {1}.", tbl.Rows.Count, elapsedTime.TotalMilliseconds);
-
-            for (int i = 0; i < tbl.Rows.Count; i++)
-            {
-                Project project = new Project();
-                DataRow row = tbl.Rows[i];
-                project.Address = Convert.ToString(row["Address"]);
-                project.APN = Convert.ToString(row["APN"]);
-                project.Notes = Convert.ToString(row["Notes"]);
-                project.PlanCheckNumber = Convert.ToInt32(row["PlanCheckNumber"]);
-                project.ProjectName = Convert.ToString(row["ProjectName"]);
-                projects.Add(project);
-
-            }
-
-            return projects;
-        } 
-        #endregion
-
         #region GetProjectPage
         //gets a single page of data
         public Tuple<List<Project>, int> GetProjectPage(int currentPage, int rowsPerPage)
@@ -101,6 +51,40 @@ namespace Rsff.BusinessLayer
         } 
         #endregion
 
+        public Tuple<List<Project>, int> SearchProjectByPlanCheckNumber(int planCheckNumber)
+        {
+            DaoProjects dao = new DaoProjects();
+            //this dataset returns 2 data tables
+            //i am doing this to avoid making 2 trips to the db
+            //1 for the data
+            //1 for the row count
+            
+            DataSet ds = dao.SearchProjectByPlanCheckNumber(planCheckNumber);
+            List<Project> projects = new List<Project>();
+
+            //1st table for the data
+            DataTable tbl = ds.Tables[0];
+            for (int i = 0; i < tbl.Rows.Count; i++)
+            {
+                Project project = new Project();
+                DataRow row = tbl.Rows[i];
+                project.ProjectID = Convert.ToInt32(row["ProjectID"]);
+                project.Address = Convert.ToString(row["Address"]);
+                project.APN = Convert.ToString(row["APN"]);
+                project.Notes = Convert.ToString(row["Notes"]);
+                project.PlanCheckNumber = Convert.ToInt32(row["PlanCheckNumber"]);
+                project.ProjectName = Convert.ToString(row["ProjectName"]);
+                projects.Add(project);
+            }
+
+            //2nd table for the row count
+            tbl = ds.Tables[1];
+            int rowCount = Convert.ToInt32(tbl.Rows[0][0]);
+
+            return Tuple.Create<List<Project>, int>(projects, rowCount);
+        }
+
+        #region GetProjectByProjectID
         //gets a project given a project ID
         public Project GetProjectByProjectID(int projectID)
         {
@@ -114,7 +98,8 @@ namespace Rsff.BusinessLayer
             project.PlanCheckNumber = Convert.ToInt32(row["PlanCheckNumber"]);
             project.ProjectName = Convert.ToString(row["ProjectName"]);
             return project;
-        }
+        } 
+        #endregion
 
         #region InsertProject
         //inserts project.  returns true on success or false on fail
@@ -148,6 +133,7 @@ namespace Rsff.BusinessLayer
             int rowsAffected = dao.SoftDeleteProject(projectID);
             return rowsAffected == 1;
         }
+
 
     }
 }

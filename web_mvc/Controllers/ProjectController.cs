@@ -20,22 +20,77 @@ namespace web_mvc.Controllers
         #region Index Action (Get)
         // GET: /Projects
         // Displays a page of projects
-        public ActionResult Index(int page = 1, string sortOrder = "Asc", string sortBy = "ProjectName")
+        public ActionResult Index(int page = 1, string sortOrder = "Asc", string sortBy = "ProjectName", string searchBy = "ProjectName", string searchTerm = "")
         {
             m_logger.DebugFormat("Entering Index Action");
             ProjectsBusinessLogic projectsBusinessLogic = new ProjectsBusinessLogic();
 
-            #region Get Page of Data From Databasae
-            //data comes back packed into a tuple to avoid 2 trips to db
-            //1st item is page of data
-            //2nd item is total number of records in table
-            Tuple<List<Project>, int> pagedDataTuple = projectsBusinessLogic.GetProjectPage(page, PROJECTS_PER_PAGE);
+            //searchTerm = "5";  //TEMPORARY
+            Tuple<List<Project>, int> pagedDataTuple = null;
+
+            #region Sanity Check Query String Data
+            //sanity check data on query string
+            //check to see if anyone tampered with the sortBy query string
+            //this can made more generic but this will do for now.
+            string[] projectColumnNames = {
+                                       "ProjectID",
+                                       "Address",
+                                       "APN",
+                                       "ProjectName",
+                                       "PlanCheckNumber",
+                                       "Notes"
+                                   };
+            if (!projectColumnNames.Contains(sortBy))
+            {
+                m_logger.Debug("Query String Tampering Detected.  Setting sort by to to Project Name.");
+                sortBy = "ProjectName";
+            }
+
+            if (!projectColumnNames.Contains(searchBy))
+            {
+                m_logger.Debug("Query String Tampering Detected.  Setting sort by to to Project Name.");
+                searchBy = "ProjectName";
+            } 
+            #endregion
+
+            #region Get Data From Databasae
+            if (string.IsNullOrEmpty(searchTerm)  || string.IsNullOrWhiteSpace(searchTerm))
+            {
+                //no searching
+                m_logger.Debug("searchTerm empty");
+                //data comes back packed into a tuple to avoid 2 trips to db
+                //1st item is page of data
+                //2nd item is total number of records in table
+                pagedDataTuple = projectsBusinessLogic.GetProjectPage(page, PROJECTS_PER_PAGE);
+            }
+            else
+            {
+                m_logger.DebugFormat("searchTerm: {0}", searchTerm);
+                //search - TEMPORARY this needs some more research
+                switch(searchBy)
+                {
+                    case "Address":
+                    case "APN":
+                    case "ProjectName":
+                    case "PlanCheckNumber":
+                        m_logger.DebugFormat("Search Term: {0}", searchTerm);
+                        pagedDataTuple = projectsBusinessLogic.SearchProjectByPlanCheckNumber(Convert.ToInt32(searchTerm));
+                        break;
+                    case "Notes":
+                    default:
+                        throw new Exception("oops");
+                }
+                
+                searchTerm = string.Empty;
+
+            }
 
             List<Project> pageOfProjects = pagedDataTuple.Item1;
             int totalProjectsRecordCount = pagedDataTuple.Item2;
             m_logger.DebugFormat("Current Page: {0}, Rows per page: {1}, totalProjectsRecordCount: {2}", page, PROJECTS_PER_PAGE, totalProjectsRecordCount);
-            #endregion
 
+            #endregion
+            
             #region Sort Page of Data
             //sort data here, do not bother going back to db for a measly 10 projects per page
             m_logger.DebugFormat("sortOrder:'{0}' sortBy:'{1}'", sortOrder, sortBy);
@@ -47,21 +102,7 @@ namespace web_mvc.Controllers
                 sortOrder = "Asc";
             }
 
-            //check to see if anyone tampered with the sortBy query string
-            //this can made more generic but this will do for now.
-            string[] projectColumnNames = {
-                                       "ProjectID",
-                                       "Address",
-                                       "APN",
-                                       "ProjectName",
-                                       "PlanCheckNumber",
-                                       "Notes"
-                                   };
-            if (! projectColumnNames.Contains(sortBy))
-            {
-                m_logger.Debug("Query String Tampering Detected.  Setting sort by to to Project Name.");
-                sortBy = "ProjectName";
-            }
+
 
             //sort as requested
             string sortExpression = String.Format("{0} {1}", sortBy, sortOrder);
@@ -109,7 +150,7 @@ namespace web_mvc.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("Address", "Saving new Project Failed");
+                    ModelState.AddModelError("Address", "Saving New Project Failed");
                     return View(form);
                 }
             }
@@ -174,6 +215,10 @@ namespace web_mvc.Controllers
             }
         } 
         #endregion
-    
+  
+        public ActionResult Search()
+        {
+            return Content("Search");
+        }
     }
 }

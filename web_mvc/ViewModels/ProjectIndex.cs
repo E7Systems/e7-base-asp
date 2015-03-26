@@ -10,5 +10,9 @@ namespace web_mvc.ViewModels
         public PagedData<Project> Projects { get; set; }
         public string SortOrder { get; set; }
         public string SortBy { get; set; }
+
+        public string SearchBy { get; set; }  
+
+        public string SearchTerm { get; set; }
     }
 }

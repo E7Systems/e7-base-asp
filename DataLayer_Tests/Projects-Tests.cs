@@ -41,18 +41,6 @@ namespace DataLayer_Tests
         } 
         #endregion
 
-        #region TestGetAllProjects
-        [Test]
-        public void TestGetAllProjects()
-        {
-            DaoProjects dao = new DaoProjects();
-            DataTable tbl = dao.GetAllProjectsDataTable();
-            Assert.Greater(tbl.Rows.Count, 0);
-
-
-        } 
-        #endregion
-
         #region TestGetProjectCount
         [Test(Description = "Tests Count Functionality")]
         public void TestGetProjectCount()
@@ -76,9 +64,6 @@ namespace DataLayer_Tests
             Assert.AreEqual(2, ds.Tables.Count);
             //verify 1st table has the correct number of rows of data
             Assert.AreEqual(ROW_TO - ROW_FROM + 1, ds.Tables[0].Rows.Count);
-            //verify paging logic is ok by comparing identity row ProjectID to row_from.  
-            Assert.AreEqual(ROW_FROM, Convert.ToInt32(ds.Tables[0].Rows[0]["ProjectID"]));
-            Assert.AreEqual(ROW_TO, Convert.ToInt32(ds.Tables[0].Rows[ROW_TO - ROW_FROM]["ProjectID"]));
 
             //verify 2nd table has correct row count
             int rowCount = dao.GetProjectsCount();
@@ -86,22 +71,117 @@ namespace DataLayer_Tests
             Assert.AreEqual(rowCount, Convert.ToInt32(ds.Tables[1].Rows[0][0]));
         } 
         #endregion
-    
+
+        #region TestProjectUpdate
         [Test]
         public void TestProjectUpdate()
         {
-            Assert.Fail();
-        }
+            //pick a project id at random
+            Random random = new Random();
+            DaoProjects dao = new DaoProjects();
+            int projectCount = dao.GetProjectsCount();
+            int randomProjectID = random.Next(1, projectCount);
 
+            //get that project
+            DataRow row = dao.GetProjectByProjectID(randomProjectID);
+
+            //verify something came back
+            Assert.IsNotNull(row);
+
+            //Update that row with random values
+            int projectID = Convert.ToInt32(row["ProjectID"]);
+            string projectAddress = String.Format("Random Project Address - {0}", Guid.NewGuid().ToString());
+            string APN = String.Format("Random APN - {0}", Guid.NewGuid().ToString());
+            string Notes = String.Format("Random Notes - {0}", Guid.NewGuid().ToString());
+            int planCheckNumber = random.Next();
+            string projectName = String.Format("Random Project Name - {0}", Guid.NewGuid().ToString());
+            
+            int rowsAffected = dao.UpdateProject(projectID, projectAddress, APN, Notes, planCheckNumber, projectName);
+            //verify 1 and only 1 row was updated
+            Assert.AreEqual(1, rowsAffected);
+
+            //get project back from db
+            row = dao.GetProjectByProjectID(projectID);
+            //verify something came back
+            Assert.IsNotNull(row);
+
+            //verify no mapping errors
+            Assert.AreEqual(projectID, Convert.ToInt32(row["ProjectID"]));
+            Assert.AreEqual(projectAddress, Convert.ToString(row["Address"]));
+            Assert.AreEqual(APN, Convert.ToString(row["APN"]));
+            Assert.AreEqual(Notes, Convert.ToString(row["Notes"]));
+            Assert.AreEqual(planCheckNumber, Convert.ToInt32(row["PlanCheckNumber"]));
+            Assert.AreEqual(projectName, Convert.ToString(row["ProjectName"]));
+
+
+        } 
+        #endregion
+
+        #region TestGetProjectByProjectID
         [Test]
         public void TestGetProjectByProjectID()
         {
-            Assert.Fail();
-                
-        }
+            //pick a project id at random
+            Random random = new Random();
+            DaoProjects dao = new DaoProjects();
+            int projectCount = dao.GetProjectsCount();
+            int randomProjectID = random.Next(1, projectCount);
 
+            //get that project
+            DataRow row = dao.GetProjectByProjectID(randomProjectID);
+
+            //verify something came back
+            Assert.IsNotNull(row);
+
+            //assert the row id is the same as the project id
+            Assert.AreEqual(randomProjectID, Convert.ToInt32(row["ProjectID"]));
+        } 
+        #endregion
+
+        #region TestProjectSoftDelete
         [Test]
         public void TestProjectSoftDelete()
+        {
+            //fake up data
+            Random random = new Random();
+
+            string address = string.Format("Address-{0}", Guid.NewGuid().ToString());
+            string APN = String.Format("{0}-{1}-{2}", random.Next(0, 999), random.Next(0, 999), random.Next(0, 99));
+            string notes = string.Format("Random notes for project id # {0}.", Guid.NewGuid().ToString());
+            int planCheckNumber = random.Next(1, 9999);
+            string projectName = string.Format("Project Name {0}", Guid.NewGuid().ToString());
+
+            //insert into db
+            DaoProjects dao = new DaoProjects();
+            int projectID = dao.InsertProject(address, APN, notes, planCheckNumber, projectName);
+
+            //verify row id was created
+            Assert.Greater(projectID, 0);
+
+            //get it back
+            DataRow row = dao.GetProjectByProjectID(projectID);
+            Assert.IsNotNull(row);
+
+            //soft delete it
+            int rowsAffected = dao.SoftDeleteProject(projectID);
+            //verify 1 and only 1 row deleted
+            Assert.AreEqual(1, rowsAffected);
+
+            //try and get it back
+            try
+            {
+                row = dao.GetProjectByProjectID(projectID);
+            }
+            catch (System.IndexOutOfRangeException)
+            {
+                ; //this is what sql burps up
+            }
+
+        } 
+        #endregion
+
+        [Test]
+        public void TestSearchProjectByPlanCheckNumber()
         {
             Assert.Fail();
         }
