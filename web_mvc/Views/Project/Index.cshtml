@@ -10,6 +10,9 @@
     <div class="btn-group">
         <a href="@Url.Action("Create")" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-plus"></i>Create Project</a>
    </div>
+    <div class="btn-group">
+        <a href="#" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-search"></i>Search</a>
+    </div>
     <div class="btn btn-group pull-right">
         @if (Model.Projects.HasPreviousPage)
         {
@@ -46,8 +49,13 @@
             <th><a href="@Url.Action("Index", new {page = Model.Projects.Page, SortOrder=Model.SortOrder, SortBy="PlanCheckNumber"})">Plan Check Number</a></th>
             <th><a href="@Url.Action("Index", new {page = Model.Projects.Page, SortOrder=Model.SortOrder, SortBy="Notes"})">Notes</a></th>
         </tr>
+        <tr>
+            @for (int i = 0; i < 5; i++)
+            {
+                <th><input type="text" /></th>
+            }
+        </tr>
     </thead>
-
     @foreach (var project in Model.Projects)
     {
         <tr>
@@ -63,11 +71,13 @@
 
 </table>
 
-@section Scripts
+@*move this into a dedicated scripts folder after the infrastructure is fully fleshed out*@
+@section Scripts                                            
 {
     <script>
-        $(document).ready(function() {
-            $("a[data-post]").click(function(e)
+        $(document).ready(function() {                      //after document is ready
+            $("a[data-post]").                              //look for all anchor tags that have our custom data-post attribute
+                click(function (e)                          //when clicked
                 {
                     e.preventDefault();                     //prevent navigating to original href
 
@@ -80,7 +90,7 @@
                  $("<form>")                                //create form
                 .attr("method", "post")                     //to be posted
                 .attr("action", $this.attr("href"))         //to original href
-                .appendTo(document.body)                    //append it to existing view
+                .appendTo(document.body)                    //append it to existing document
                 .submit();                                  //and post it
                 })
         });

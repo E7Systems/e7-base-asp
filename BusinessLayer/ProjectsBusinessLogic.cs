@@ -101,6 +101,7 @@ namespace Rsff.BusinessLayer
         } 
         #endregion
 
+        //gets a project given a project ID
         public Project GetProjectByProjectID(int projectID)
         {
             DaoProjects dao = new DaoProjects();
