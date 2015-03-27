@@ -102,12 +102,12 @@ namespace Rsff.BusinessLayer
         #endregion
 
         #region InsertProject
-        //inserts project.  returns true on success or false on fail
-        public bool InsertProject(string address, string APN, string notes, int planCheckNumber, string projectName)
+        //inserts project.  returns project id
+        public int InsertProject(string address, string APN, string notes, int planCheckNumber, string projectName)
         {
             DaoProjects dao = new DaoProjects();
             int rowID = dao.InsertProject(address, APN, notes, planCheckNumber, projectName);
-            return rowID > 0;
+            return rowID;
         } 
         #endregion
 

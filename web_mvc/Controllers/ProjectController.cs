@@ -54,36 +54,36 @@ namespace web_mvc.Controllers
             #endregion
 
             #region Get Data From Databasae
-            if (string.IsNullOrEmpty(searchTerm)  || string.IsNullOrWhiteSpace(searchTerm))
-            {
+            //if (string.IsNullOrEmpty(searchTerm)  || string.IsNullOrWhiteSpace(searchTerm))
+            //{
                 //no searching
                 m_logger.Debug("searchTerm empty");
                 //data comes back packed into a tuple to avoid 2 trips to db
                 //1st item is page of data
                 //2nd item is total number of records in table
                 pagedDataTuple = projectsBusinessLogic.GetProjectPage(page, PROJECTS_PER_PAGE);
-            }
-            else
-            {
-                m_logger.DebugFormat("searchTerm: {0}", searchTerm);
-                //search - TEMPORARY this needs some more research
-                switch(searchBy)
-                {
-                    case "Address":
-                    case "APN":
-                    case "ProjectName":
-                    case "PlanCheckNumber":
-                        m_logger.DebugFormat("Search Term: {0}", searchTerm);
-                        pagedDataTuple = projectsBusinessLogic.SearchProjectByPlanCheckNumber(Convert.ToInt32(searchTerm));
-                        break;
-                    case "Notes":
-                    default:
-                        throw new Exception("oops");
-                }
+            //}
+            //else
+            //{
+            //    m_logger.DebugFormat("searchTerm: {0}", searchTerm);
+            //    search - TEMPORARY this needs some more research
+            //    switch(searchBy)
+            //    {
+            //        case "Address":
+            //        case "APN":
+            //        case "ProjectName":
+            //        case "PlanCheckNumber":
+            //            m_logger.DebugFormat("Search Term: {0}", searchTerm);
+            //            pagedDataTuple = projectsBusinessLogic.SearchProjectByPlanCheckNumber(Convert.ToInt32(searchTerm));
+            //            break;
+            //        case "Notes":
+            //        default:
+            //            throw new Exception("oops");
+            //    }
                 
-                searchTerm = string.Empty;
+            //    searchTerm = string.Empty;
 
-            }
+            //}
 
             List<Project> pageOfProjects = pagedDataTuple.Item1;
             int totalProjectsRecordCount = pagedDataTuple.Item2;
@@ -142,8 +142,9 @@ namespace web_mvc.Controllers
             {
                 m_logger.DebugFormat("Create Action, attempting to insert new project with data values: {0}", form.Project.ToString());
                 ProjectsBusinessLogic projectsBusinessLogic = new ProjectsBusinessLogic();
-                bool success = projectsBusinessLogic.InsertProject(form.Project.Address, form.Project.APN, form.Project.Notes, form.Project.PlanCheckNumber, form.Project.ProjectName);
-                m_logger.DebugFormat("projectsBusinessLogic.InsertProject returned : {0}", success);
+                int projectID = projectsBusinessLogic.InsertProject(form.Project.Address, form.Project.APN, form.Project.Notes, form.Project.PlanCheckNumber, form.Project.ProjectName);
+                bool success = projectID > 0;
+                m_logger.DebugFormat("projectsBusinessLogic.InsertProject returned : {0}", projectID);
                 if (success)
                 {
                     return RedirectToAction("Index");

@@ -39,7 +39,7 @@ namespace Rsff.DataLayer
         //returns 2 data tables
         //1st data table contains a page of data
         //2nd data table is a 1 row, 1 column data table which is the count of rows in entire table.  
-        //this is used for paging.  i retrieve it so i only make 1 trip to the db
+        //this is used for paging.  I retrieve it so i only make 1 trip to the db
         public DataSet GetProjectPage(int rowFrom, int rowTo)
         {
             const string PROC = "[dbo].[up_Project_Get_Page]";
@@ -67,9 +67,10 @@ namespace Rsff.DataLayer
         #endregion
 
         //move this to the unit testing db
+        //returns count of non soft deleted records
         public int GetProjectsCount()
         {
-            const string PROC = "[dbo].[up_Project_Get_TotalCount]";
+            const string PROC = "[dbo].[up_Project_Get_Count]";
             using (SqlConnection conn = new SqlConnection(m_ConnectionString))
             {
                 using (SqlDataAdapter adapter = new SqlDataAdapter())

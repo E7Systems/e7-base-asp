@@ -76,25 +76,41 @@ namespace DataLayer_Tests
         [Test]
         public void TestProjectUpdate()
         {
-            //pick a project id at random
+            //fake up data
             Random random = new Random();
+
+            string projectAddress = string.Format("Address-{0}", Guid.NewGuid().ToString());
+            string APN = String.Format("{0}-{1}-{2}", random.Next(0, 999), random.Next(0, 999), random.Next(0, 99));
+            string Notes = string.Format("Random notes for project id # {0}.", Guid.NewGuid().ToString());
+            int planCheckNumber = random.Next(1, 9999);
+            string projectName = string.Format("Project Name {0}", Guid.NewGuid().ToString());
+
+            //insert into db
             DaoProjects dao = new DaoProjects();
-            int projectCount = dao.GetProjectsCount();
-            int randomProjectID = random.Next(1, projectCount);
+            int projectID = dao.InsertProject(projectAddress, APN, Notes, planCheckNumber, projectName);
 
-            //get that project
-            DataRow row = dao.GetProjectByProjectID(randomProjectID);
+            //verify something came back
+            Assert.Greater(projectID,0);
 
+            //get project back from db
+            DataRow row = dao.GetProjectByProjectID(projectID);
             //verify something came back
             Assert.IsNotNull(row);
 
+            //verify no mapping errors
+            Assert.AreEqual(projectID, Convert.ToInt32(row["ProjectID"]));
+            Assert.AreEqual(projectAddress, Convert.ToString(row["Address"]));
+            Assert.AreEqual(APN, Convert.ToString(row["APN"]));
+            Assert.AreEqual(Notes, Convert.ToString(row["Notes"]));
+            Assert.AreEqual(planCheckNumber, Convert.ToInt32(row["PlanCheckNumber"]));
+            Assert.AreEqual(projectName, Convert.ToString(row["ProjectName"]));
+
             //Update that row with random values
-            int projectID = Convert.ToInt32(row["ProjectID"]);
-            string projectAddress = String.Format("Random Project Address - {0}", Guid.NewGuid().ToString());
-            string APN = String.Format("Random APN - {0}", Guid.NewGuid().ToString());
-            string Notes = String.Format("Random Notes - {0}", Guid.NewGuid().ToString());
-            int planCheckNumber = random.Next();
-            string projectName = String.Format("Random Project Name - {0}", Guid.NewGuid().ToString());
+            projectAddress = String.Format("Random Project Address - {0}", Guid.NewGuid().ToString());
+            APN = String.Format("Random APN - {0}", Guid.NewGuid().ToString());
+            Notes = String.Format("Random Notes - {0}", Guid.NewGuid().ToString());
+            planCheckNumber = random.Next();
+            projectName = String.Format("Random Project Name - {0}", Guid.NewGuid().ToString());
             
             int rowsAffected = dao.UpdateProject(projectID, projectAddress, APN, Notes, planCheckNumber, projectName);
             //verify 1 and only 1 row was updated
@@ -128,6 +144,7 @@ namespace DataLayer_Tests
             int randomProjectID = random.Next(1, projectCount);
 
             //get that project
+            //note this will fail randomly depending on whether the project has been soft deleted or not
             DataRow row = dao.GetProjectByProjectID(randomProjectID);
 
             //verify something came back
