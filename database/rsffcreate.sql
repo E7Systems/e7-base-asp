@@ -245,7 +245,8 @@ CREATE TABLE [dbo].[Projects](
 	[APN] [varchar](255) NOT NULL,
 	[Notes] [varchar](max) NOT NULL,
 	[PlanCheckNumber] [int] NOT NULL,
-	[ProjectName] [varchar](255) NOT NULL
+	[ProjectName] [varchar](255) NOT NULL,
+	[IsDeleted] [int] NOT NULL
 ) ON [PRIMARY]
 GO
 SET ANSI_PADDING OFF
@@ -263,6 +264,112 @@ CREATE TABLE [dbo].[Parameters](
 ) ON [PRIMARY]
 GO
 SET ANSI_PADDING OFF
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+CREATE VIEW [dbo].[vw_aspnet_Applications]
+  AS SELECT [dbo].[aspnet_Applications].[ApplicationName], [dbo].[aspnet_Applications].[LoweredApplicationName], [dbo].[aspnet_Applications].[ApplicationId], [dbo].[aspnet_Applications].[Description]
+  FROM [dbo].[aspnet_Applications]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+CREATE PROCEDURE [dbo].[up_Project_Update]
+@ProjectID int,
+@Address varchar(255),
+@APN varchar(255),
+@Notes varchar(MAX),
+@PlanCheckNumber int,
+@ProjectName varchar(255)
+AS
+UPDATE Projects
+SET Address=@Address,  APN=@APN,  Notes=@Notes,  PlanCheckNumber=@PlanCheckNumber,  ProjectName=@ProjectName
+WHERE ProjectID = @ProjectID
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+CREATE PROCEDURE [dbo].[up_Project_SoftDelete]
+@ProjectID int
+AS
+Update Projects SET IsDeleted = 1
+Where ProjectID=@ProjectID;
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+CREATE PROCEDURE [dbo].[up_Project_Search_By_PlanCheckNumber]
+@PlanCheckNumber int
+AS
+Select * from Projects
+Where (PlanCheckNumber = @PlanCheckNumber) AND IsDeleted=0;
+
+Select COUNT(*) from Projects
+Where (PlanCheckNumber = @PlanCheckNumber) AND IsDeleted=0;
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+CREATE PROCEDURE [dbo].[up_Project_Insert]
+@Address varchar(255),
+@APN varchar(255),
+@Notes varchar(MAX),
+@PlanCheckNumber int,
+@ProjectName varchar(255)
+AS
+INSERT INTO Projects
+				(Address,  APN,  Notes,  PlanCheckNumber,  ProjectName)
+VALUES			(@Address, @APN, @Notes, @PlanCheckNumber, @ProjectName);   
+SELECT SCOPE_IDENTITY();
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+CREATE PROCEDURE [dbo].[up_Project_Get_Page]
+    @rowFrom INT,
+    @rowTo INT
+AS
+
+--ProjectID not strictly necessary but it helps in verifying paging logic is working correctly
+SELECT * FROM
+(
+SELECT ROW_NUMBER() OVER (ORDER BY ProjectID ) AS rowIndex, ProjectID, Address, APN, Notes, PlanCheckNumber, ProjectName
+FROM Projects
+WHERE IsDeleted=0
+)
+tbl
+WHERE rowIndex BETWEEN @rowFrom AND @rowTo 
+
+--get a count of all rows in the projects table and send it back via OUTPUT
+--this avoids a second expensive trip back to the database to get total row count
+SELECT COUNT(*) FROM Projects
+WHERE IsDeleted = 0
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+CREATE PROCEDURE [dbo].[up_Project_Get_Count]
+AS
+Select COUNT(*) from Projects
+WHERE IsDeleted = 0
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+CREATE PROCEDURE [dbo].[up_Project_Get_By_ProjectID]
+@ProjectID int
+AS
+Select * from Projects
+Where ProjectID=@ProjectID and IsDeleted=0;
 GO
 SET ANSI_NULLS ON
 GO
@@ -324,94 +431,6 @@ BEGIN
         @Details
     )
 END
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER OFF
-GO
-CREATE VIEW [dbo].[vw_aspnet_Applications]
-  AS SELECT [dbo].[aspnet_Applications].[ApplicationName], [dbo].[aspnet_Applications].[LoweredApplicationName], [dbo].[aspnet_Applications].[ApplicationId], [dbo].[aspnet_Applications].[Description]
-  FROM [dbo].[aspnet_Applications]
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER OFF
-GO
-CREATE PROCEDURE [dbo].[up_Projects_Get_List]
-AS
-Select * from Projects
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER OFF
-GO
-CREATE PROCEDURE [dbo].[up_Project_Update]
-@ProjectID int,
-@Address varchar(255),
-@APN varchar(255),
-@Notes varchar(MAX),
-@PlanCheckNumber int,
-@ProjectName varchar(255)
-AS
-UPDATE Projects
-SET Address=@Address,  APN=@APN,  Notes=@Notes,  PlanCheckNumber=@PlanCheckNumber,  ProjectName=@ProjectName
-WHERE ProjectID = @ProjectID
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER OFF
-GO
-CREATE PROCEDURE [dbo].[up_Project_Insert]
-@Address varchar(255),
-@APN varchar(255),
-@Notes varchar(MAX),
-@PlanCheckNumber int,
-@ProjectName varchar(255)
-AS
-INSERT INTO Projects
-				(Address,  APN,  Notes,  PlanCheckNumber,  ProjectName)
-VALUES			(@Address, @APN, @Notes, @PlanCheckNumber, @ProjectName);   
-SELECT SCOPE_IDENTITY();
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER OFF
-GO
-CREATE PROCEDURE [dbo].[up_Project_Get_TotalCount]
-AS
-Select COUNT(*) from Projects
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER OFF
-GO
-CREATE PROCEDURE [dbo].[up_Project_Get_Page]
-    @rowFrom INT,
-    @rowTo INT
-AS
-
---ProjectID not strictly necessary but it helps in verifying paging logic is working correctly
-SELECT * FROM
-(
-SELECT ROW_NUMBER() OVER (ORDER BY ProjectID ) AS rowIndex, ProjectID, Address, APN, Notes, PlanCheckNumber, ProjectName
-FROM Projects
-)
-tbl
-WHERE rowIndex BETWEEN @rowFrom AND @rowTo
-
---get a count of all rows in the projects table and send it back via OUTPUT
---this avoids a second expensive trip back to the database to get total row count
-SELECT COUNT(*) FROM Projects
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER OFF
-GO
-CREATE PROCEDURE [dbo].[up_Project_Get_By_ProjectID]
-@ProjectID int
-AS
-Select * from Projects
-Where ProjectID=@ProjectID;
 GO
 SET ANSI_NULLS ON
 GO
@@ -3672,6 +3691,8 @@ Cleanup:
 END
 GO
 ALTER TABLE [dbo].[aspnet_Applications] ADD  DEFAULT (newid()) FOR [ApplicationId]
+GO
+ALTER TABLE [dbo].[Projects] ADD  CONSTRAINT [DF_Projects_IsDeleted]  DEFAULT ((0)) FOR [IsDeleted]
 GO
 ALTER TABLE [dbo].[Parameters] ADD  CONSTRAINT [DF_Parameters_LastModified]  DEFAULT (getdate()) FOR [LastModified]
 GO
