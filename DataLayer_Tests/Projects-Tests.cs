@@ -137,21 +137,30 @@ namespace DataLayer_Tests
         [Test]
         public void TestGetProjectByProjectID()
         {
-            //pick a project id at random
+            //fake up data
             Random random = new Random();
+
+            string projectAddress = string.Format("Address-{0}", Guid.NewGuid().ToString());
+            string APN = String.Format("{0}-{1}-{2}", random.Next(0, 999), random.Next(0, 999), random.Next(0, 99));
+            string Notes = string.Format("Random notes for project id # {0}.", Guid.NewGuid().ToString());
+            int planCheckNumber = random.Next(1, 9999);
+            string projectName = string.Format("Project Name {0}", Guid.NewGuid().ToString());
+
+            //insert into db
             DaoProjects dao = new DaoProjects();
-            int projectCount = dao.GetProjectsCount();
-            int randomProjectID = random.Next(1, projectCount);
+            int projectID = dao.InsertProject(projectAddress, APN, Notes, planCheckNumber, projectName);
+
+            //verify something came back
+            Assert.Greater(projectID, 0);
 
             //get that project
-            //note this will fail randomly depending on whether the project has been soft deleted or not
-            DataRow row = dao.GetProjectByProjectID(randomProjectID);
+            DataRow row = dao.GetProjectByProjectID(projectID);
 
             //verify something came back
             Assert.IsNotNull(row);
 
             //assert the row id is the same as the project id
-            Assert.AreEqual(randomProjectID, Convert.ToInt32(row["ProjectID"]));
+            Assert.AreEqual(projectID, Convert.ToInt32(row["ProjectID"]));
         } 
         #endregion
 

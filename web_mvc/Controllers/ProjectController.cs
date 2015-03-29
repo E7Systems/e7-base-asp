@@ -217,9 +217,5 @@ namespace web_mvc.Controllers
         } 
         #endregion
   
-        public ActionResult Search()
-        {
-            return Content("Search");
-        }
     }
 }

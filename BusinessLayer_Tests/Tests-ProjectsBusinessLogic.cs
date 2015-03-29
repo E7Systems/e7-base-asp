@@ -40,6 +40,7 @@ namespace BusinessLayer_Tests
         } 
         #endregion
 
+        #region TestGetProjectByProjectID
         [Test]
         public void TestGetProjectByProjectID()
         {
@@ -68,8 +69,10 @@ namespace BusinessLayer_Tests
             Assert.AreEqual(notes, project.Notes);
             Assert.AreEqual(planCheckNumber, project.PlanCheckNumber);
             Assert.AreEqual(projectName, project.ProjectName);
-        }
+        } 
+        #endregion
 
+        #region TestProjectInsert
         [Test]
         public void TestProjectInsert()
         {
@@ -80,8 +83,8 @@ namespace BusinessLayer_Tests
             string APN = String.Format("{0}-{1}-{2}", random.Next(0, 999), random.Next(0, 999), random.Next(0, 99));
             string notes = string.Format("Random notes for project id # {0}.", Guid.NewGuid().ToString());
             int planCheckNumber = random.Next(1, 9999);
-            string projectName = string.Format("Project Name {0}", Guid.NewGuid().ToString()); 
-            
+            string projectName = string.Format("Project Name {0}", Guid.NewGuid().ToString());
+
             //insert a project
             int projectID = projectsBusinessLogic.InsertProject(address, APN, notes, planCheckNumber, projectName);
 
@@ -99,8 +102,10 @@ namespace BusinessLayer_Tests
             Assert.AreEqual(planCheckNumber, project.PlanCheckNumber);
             Assert.AreEqual(projectName, project.ProjectName);
 
-        }
+        } 
+        #endregion
 
+        #region TestProjectUpdate
         [Test]
         public void TestProjectUpdate()
         {
@@ -141,13 +146,15 @@ namespace BusinessLayer_Tests
             Assert.AreEqual(projectName, project.ProjectName);
 
 
-        }
+        } 
+        #endregion
 
+        #region TestProjectSoftDelete
         [Test]
         [ExpectedException(typeof(System.IndexOutOfRangeException))]
         public void TestProjectSoftDelete()
         {
-           
+
             //fake up some data
             Random random = new Random();
             ProjectsBusinessLogic projectsBusinessLogic = new ProjectsBusinessLogic();
@@ -172,7 +179,8 @@ namespace BusinessLayer_Tests
 
 
             //todo:  verify the project still exists in the db but is soft deleted
-        }
+        } 
+        #endregion
 
         [Test]
         public void TestSearchByPlanCheckNumber()

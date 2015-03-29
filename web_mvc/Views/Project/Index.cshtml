@@ -9,7 +9,7 @@
 
 <div class="btn-toolbar">
     <div class="btn-group">
-        <a href="@Url.Action("Index", new { page = Model.Projects.Page, SortOrder = Model.SortOrder, SortBy = "PlanCheckNumber", SearchBy = "PlanCheckNumber", SearchTerm = Model.SearchTerm })" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-search"></i>Search</></a>
+        <a href="@Url.Action("Index", new { page = Model.Projects.Page, SearchBy = "PlanCheckNumber", SearchTerm = Model.SearchTerm })" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-search"></i>Search</></a>
     </div>
     <div class="btn btn-group pull-right">
         @if (Model.Projects.HasPreviousPage)
@@ -49,6 +49,7 @@
             <th><a href="@Url.Action("Index", new { page = Model.Projects.Page, SortOrder = Model.SortOrder, SortBy = "ProjectName", SearchBy = "ProjectName", SearchTerm = Model.SearchTerm })">Project Name</a></th>
             <th><a href="@Url.Action("Index", new { page = Model.Projects.Page, SortOrder = Model.SortOrder, SortBy = "PlanCheckNumber", SearchBy = "PlanCheckNumber", SearchTerm = Model.SearchTerm })">Plan Check Number</a></th>
             <th><a href="@Url.Action("Index", new { page = Model.Projects.Page, SortOrder = Model.SortOrder, SortBy = "Notes", SearchBy = "Notes", SearchTerm = Model.SearchTerm })">Notes</a></th>
+            <th colspan="2" align="center">Actions</th>
         </tr>
         <tr>
             @for (int i = 0; i < 5; i++)
@@ -56,6 +57,7 @@
                 <th><input type="text" /></th>
             }
         </tr>
+
     </thead>
     @foreach (var project in Model.Projects)
     {
@@ -72,10 +74,10 @@
 
 </table>
 
-@*move this into a dedicated scripts folder after the infrastructure is fully fleshed out*@
+@*move this into a dedicated scripts folder after the script bundle infrastructure is fully fleshed out*@
 @section Scripts                                            
 {
-    <script>
+    <script>                                                    //script used by Delete Action.  Converts http get to post with a Confirm() dialog.
         $(document).ready(                                      //after document is ready
             function ()
             {                      
