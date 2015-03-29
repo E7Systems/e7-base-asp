@@ -206,10 +206,38 @@ namespace DataLayer_Tests
         } 
         #endregion
 
+
+
+        [Test]
+        public void TestSearchProjectByAddress()
+        {
+            Assert.Fail();
+        }
+
+        [Test]
+        public void TestSearchProjectByAPN()
+        {
+            Assert.Fail();
+        }
+
+        [Test]
+        public void TestSearchProjectByNotes()
+        {
+            Assert.Fail();
+        }
+
         [Test]
         public void TestSearchProjectByPlanCheckNumber()
         {
             Assert.Fail();
         }
+
+        [Test]
+        public void TestSearchProjectByProjectName()
+        {
+            Assert.Fail();
+        }
+
+
     }
 }

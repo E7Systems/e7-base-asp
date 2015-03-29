@@ -8,11 +8,16 @@ namespace web_mvc.ViewModels
     public class ProjectIndex
     {
         public PagedData<Project> Projects { get; set; }
+        
+        //Sort related
         public string SortOrder { get; set; }
         public string SortBy { get; set; }
 
-        public string SearchBy { get; set; }  
-
-        public string SearchTerm { get; set; }
+        //Search Related
+        public string AddressSearchTerm { get; set; }
+        public string APNSearchTerm { get; set; }
+        public string ProjectNameSearchTerm { get; set; }
+        public string PlanCheckNumberSearchTerm { get; set; }
+        public string NotesSearchTerm { get; set; }
     }
 }

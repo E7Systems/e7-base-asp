@@ -179,6 +179,58 @@ namespace Rsff.DataLayer
         } 
         #endregion
 
+        #region SearchProjectByAddress
+        public DataSet SearchProjectByAddress(string address)
+        {
+            const string PROC = "[dbo].[up_Project_Search_By_Address]";
+            DataSet ds = new DataSet();
+            using (SqlConnection conn = new SqlConnection(m_ConnectionString))
+            {
+                using (SqlDataAdapter adapter = new SqlDataAdapter())
+                {
+                    using (SqlCommand command = new SqlCommand())
+                    {
+                        command.CommandType = System.Data.CommandType.StoredProcedure;
+                        command.CommandText = PROC;
+                        command.Parameters.AddWithValue("@Address", address);
+                        conn.Open();
+                        command.Connection = conn;
+                        adapter.SelectCommand = command;
+                        adapter.Fill(ds);
+                        conn.Close();
+                        return ds;
+                    }
+                }
+            }
+        } 
+        #endregion
+
+        #region SearchProjectByAPN
+        public DataSet SearchProjectByAPN(string APN)
+        {
+            const string PROC = "[dbo].[up_Project_Search_By_APN]";
+            DataSet ds = new DataSet();
+            using (SqlConnection conn = new SqlConnection(m_ConnectionString))
+            {
+                using (SqlDataAdapter adapter = new SqlDataAdapter())
+                {
+                    using (SqlCommand command = new SqlCommand())
+                    {
+                        command.CommandType = System.Data.CommandType.StoredProcedure;
+                        command.CommandText = PROC;
+                        command.Parameters.AddWithValue("@APN", APN);
+                        conn.Open();
+                        command.Connection = conn;
+                        adapter.SelectCommand = command;
+                        adapter.Fill(ds);
+                        conn.Close();
+                        return ds;
+                    }
+                }
+            }
+        } 
+        #endregion
+
         #region SearchProjectByPlanCheckNumber
         public DataSet SearchProjectByPlanCheckNumber(int planCheckNumber)
         {
@@ -202,8 +254,59 @@ namespace Rsff.DataLayer
                     }
                 }
             }
+        }
+        #endregion
+
+        #region SearchProjectByProjectName
+        public DataSet SearchProjectByProjectName(string projectName)
+        {
+            const string PROC = "[dbo].[up_Project_Search_By_ProjectName]";
+            DataSet ds = new DataSet();
+            using (SqlConnection conn = new SqlConnection(m_ConnectionString))
+            {
+                using (SqlDataAdapter adapter = new SqlDataAdapter())
+                {
+                    using (SqlCommand command = new SqlCommand())
+                    {
+                        command.CommandType = System.Data.CommandType.StoredProcedure;
+                        command.CommandText = PROC;
+                        command.Parameters.AddWithValue("@ProjectName", projectName);
+                        conn.Open();
+                        command.Connection = conn;
+                        adapter.SelectCommand = command;
+                        adapter.Fill(ds);
+                        conn.Close();
+                        return ds;
+                    }
+                }
+            }
         } 
         #endregion
 
+        #region SearchProjectByNotes
+        public DataSet SearchProjectByNotes(string Notes)
+        {
+            const string PROC = "[dbo].[up_Project_Search_By_Notes]";
+            DataSet ds = new DataSet();
+            using (SqlConnection conn = new SqlConnection(m_ConnectionString))
+            {
+                using (SqlDataAdapter adapter = new SqlDataAdapter())
+                {
+                    using (SqlCommand command = new SqlCommand())
+                    {
+                        command.CommandType = System.Data.CommandType.StoredProcedure;
+                        command.CommandText = PROC;
+                        command.Parameters.AddWithValue("@Notes", Notes);
+                        conn.Open();
+                        command.Connection = conn;
+                        adapter.SelectCommand = command;
+                        adapter.Fill(ds);
+                        conn.Close();
+                        return ds;
+                    }
+                }
+            }
+        } 
+        #endregion
     }
 }

@@ -183,7 +183,31 @@ namespace BusinessLayer_Tests
         #endregion
 
         [Test]
+        public void TestSearchByAddress()
+        {
+            Assert.Fail();
+        }
+
+        [Test]
+        public void TestSearchByAPN()
+        {
+            Assert.Fail();
+        }
+
+        [Test]
         public void TestSearchByPlanCheckNumber()
+        {
+            Assert.Fail();
+        }
+
+        [Test]
+        public void TestSearchByProjectName()
+        {
+            Assert.Fail();
+        }
+
+        [Test]
+        public void TestSearchByNotes()
         {
             Assert.Fail();
         }

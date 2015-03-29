@@ -20,12 +20,11 @@ namespace web_mvc.Controllers
         #region Index Action (Get)
         // GET: /Projects
         // Displays a page of projects
-        public ActionResult Index(int page = 1, string sortOrder = "Asc", string sortBy = "ProjectName", string searchBy = "ProjectName", string searchTerm = "")
+        public ActionResult Index(int page = 1, string sortOrder = "Asc", string sortBy = "ProjectName")
         {
-            m_logger.DebugFormat("Entering Index Action");
+            m_logger.DebugFormat("Entering Index Action (Get)");
             ProjectsBusinessLogic projectsBusinessLogic = new ProjectsBusinessLogic();
 
-            //searchTerm = "5";  //TEMPORARY
             Tuple<List<Project>, int> pagedDataTuple = null;
 
             #region Sanity Check Query String Data
@@ -46,45 +45,14 @@ namespace web_mvc.Controllers
                 sortBy = "ProjectName";
             }
 
-            if (!projectColumnNames.Contains(searchBy))
-            {
-                m_logger.Debug("Query String Tampering Detected.  Setting sort by to to Project Name.");
-                searchBy = "ProjectName";
-            } 
             #endregion
 
             #region Get Data From Databasae
-            //if (string.IsNullOrEmpty(searchTerm)  || string.IsNullOrWhiteSpace(searchTerm))
-            //{
-                //no searching
-                m_logger.Debug("searchTerm empty");
-                //data comes back packed into a tuple to avoid 2 trips to db
-                //1st item is page of data
-                //2nd item is total number of records in table
-                pagedDataTuple = projectsBusinessLogic.GetProjectPage(page, PROJECTS_PER_PAGE);
-            //}
-            //else
-            //{
-            //    m_logger.DebugFormat("searchTerm: {0}", searchTerm);
-            //    search - TEMPORARY this needs some more research
-            //    switch(searchBy)
-            //    {
-            //        case "Address":
-            //        case "APN":
-            //        case "ProjectName":
-            //        case "PlanCheckNumber":
-            //            m_logger.DebugFormat("Search Term: {0}", searchTerm);
-            //            pagedDataTuple = projectsBusinessLogic.SearchProjectByPlanCheckNumber(Convert.ToInt32(searchTerm));
-            //            break;
-            //        case "Notes":
-            //        default:
-            //            throw new Exception("oops");
-            //    }
-                
-            //    searchTerm = string.Empty;
 
-            //}
-
+            //data comes back packed into a tuple to avoid 2 trips to db
+            //1st item is page of data
+            //2nd item is total number of records in table
+            pagedDataTuple = projectsBusinessLogic.GetProjectPage(page, PROJECTS_PER_PAGE);
             List<Project> pageOfProjects = pagedDataTuple.Item1;
             int totalProjectsRecordCount = pagedDataTuple.Item2;
             m_logger.DebugFormat("Current Page: {0}, Rows per page: {1}, totalProjectsRecordCount: {2}", page, PROJECTS_PER_PAGE, totalProjectsRecordCount);
@@ -101,8 +69,6 @@ namespace web_mvc.Controllers
                 m_logger.Debug("Query String Tampering Detected.  Setting sort order to Ascending.");
                 sortOrder = "Asc";
             }
-
-
 
             //sort as requested
             string sortExpression = String.Format("{0} {1}", sortBy, sortOrder);
@@ -123,6 +89,53 @@ namespace web_mvc.Controllers
             //send it to be displayed in the view
             return View(projectIndex);
             #endregion
+        } 
+        #endregion
+
+        #region Index Action (Post)
+        [HttpPost]
+        public ActionResult Index(ProjectIndex form)
+        {
+            m_logger.DebugFormat("Entering Index Action (Post)");
+
+            ProjectsBusinessLogic projectsBusinessLogic = new ProjectsBusinessLogic();
+            Tuple<List<Project>, int> pagedDataTuple  = null;
+
+            //walk from left to right in UI order, looking for a non-empty UI search element.
+            //when one is found, use it ignoring the others.
+            if (!string.IsNullOrEmpty(form.AddressSearchTerm))
+            {
+                m_logger.DebugFormat("Searching by Address. Search term is: {0}", form.AddressSearchTerm);
+                pagedDataTuple = projectsBusinessLogic.SearchProjectByAddress(form.AddressSearchTerm);
+            } 
+            else if (!string.IsNullOrEmpty(form.APNSearchTerm))
+            {
+                m_logger.DebugFormat("Searching by APN. Search term is: {0}", form.APNSearchTerm);
+                pagedDataTuple = projectsBusinessLogic.SearchProjectByAPN(form.APNSearchTerm);
+            }
+            else if (!string.IsNullOrEmpty(form.ProjectNameSearchTerm))
+            {
+                m_logger.DebugFormat("Searching by APN. Search term is: {0}", form.ProjectNameSearchTerm);
+                pagedDataTuple = projectsBusinessLogic.SearchProjectByProjectName(form.ProjectNameSearchTerm);
+            }
+            else if (!string.IsNullOrEmpty(form.PlanCheckNumberSearchTerm))
+            {
+                pagedDataTuple = projectsBusinessLogic.SearchProjectByPlanCheckNumber(Convert.ToInt32(form.PlanCheckNumberSearchTerm));
+            }
+            else if (!string.IsNullOrEmpty(form.NotesSearchTerm))
+            {
+                pagedDataTuple = projectsBusinessLogic.SearchProjectByNotes(form.NotesSearchTerm);
+            }
+            else
+            {
+                RedirectToAction("Index");  //this happens too late, will not work
+            }
+
+            List<Project> pageOfProjects = pagedDataTuple.Item1;
+            int totalProjectsRecordCount = pagedDataTuple.Item2;
+            const int SEARCH_START_PAGE = 1; //start at page 1 with our search results
+            form.Projects = new PagedData<Project>(pageOfProjects, totalProjectsRecordCount, SEARCH_START_PAGE, PROJECTS_PER_PAGE);
+            return View(form);
         } 
         #endregion
 
