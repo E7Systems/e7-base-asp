@@ -303,6 +303,19 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
+CREATE PROCEDURE [dbo].[up_Project_Search_By_ProjectName]
+@ProjectName varchar(255)
+AS
+Select * from Projects
+Where (ProjectName = @ProjectName) AND IsDeleted=0;
+
+Select COUNT(*) from Projects
+Where (ProjectName = @ProjectName) AND IsDeleted=0;
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
 CREATE PROCEDURE [dbo].[up_Project_Search_By_PlanCheckNumber]
 @PlanCheckNumber int
 AS
@@ -311,6 +324,45 @@ Where (PlanCheckNumber = @PlanCheckNumber) AND IsDeleted=0;
 
 Select COUNT(*) from Projects
 Where (PlanCheckNumber = @PlanCheckNumber) AND IsDeleted=0;
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+CREATE PROCEDURE [dbo].[up_Project_Search_By_Notes]
+@Notes varchar(255)
+AS
+Select * from Projects
+Where (Notes = @Notes) AND IsDeleted=0;
+
+Select COUNT(*) from Projects
+Where (Notes = @Notes) AND IsDeleted=0;
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+CREATE PROCEDURE [dbo].[up_Project_Search_By_APN]
+@APN varchar(255)
+AS
+Select * from Projects
+Where (APN = @APN) AND IsDeleted=0;
+
+Select COUNT(*) from Projects
+Where (APN = @APN) AND IsDeleted=0;
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+CREATE PROCEDURE [dbo].[up_Project_Search_By_Address]
+@Address varchar(255)
+AS
+Select * from Projects
+Where (Address = @Address) AND IsDeleted=0;
+
+Select COUNT(*) from Projects
+Where (Address = @Address) AND IsDeleted=0;
 GO
 SET ANSI_NULLS ON
 GO
@@ -3746,7 +3798,7 @@ GO
 
 
 --put the database schema version in the db
-INSERT INTO Parameters(ParameterName, [Value]) Values('DBVersion', '1.0.0.1')
+INSERT INTO Parameters(ParameterName, [Value]) Values('DBVersion', '1.0.0.2')
 GO
 
 --/\*.*?\*/.*?\n
