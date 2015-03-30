@@ -71,7 +71,7 @@
             <td> @project.PlanCheckNumber</td>
             <td> @project.Notes</td>
             <td><a href="@Url.Action("Edit", new {project.ProjectID})" class="btn btn-primary btn-xs">Edit<i class="glyphicon glyphicon-edit"></i></a></td>
-            <td><a href="@Url.Action("Delete", new {project.ProjectID})" data-post="Are you sure you want to delete this Project?" class="btn btn-primary btn-xs">Delete<i class="glyphicon glyphicon-trash"></i></a></td>
+            <td><a href="@Url.Action("Delete", new {project.ProjectID})" data-confirm="Are you sure you want to delete this Project?" class="btn btn-primary btn-xs">Delete<i class="glyphicon glyphicon-trash"></i></a></td>
         </tr>
     }
 
@@ -85,13 +85,13 @@
         $(document).ready(                                      //after document is ready
             function ()
             {                      
-                $("a[data-post]").                              //look for all anchor tags that have our custom data-post attribute
+                $("a[data-confirm]").                              //look for all anchor tags that have our custom data-post attribute
                     click(function (e)                          //when clicked
                     {
                         e.preventDefault();                     //prevent navigating to original href
 
                         var $this = $(this);
-                        var message = $this.data("post");       //extract message
+                        var message = $this.data("confirm");       //extract message
 
                         if (message && !confirm(message))       //if no confirm, return
                             return;

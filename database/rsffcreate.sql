@@ -20,7 +20,7 @@ Execute(
 'CREATE DATABASE [rsff] ON  PRIMARY 
 ( NAME = N''rsff'', FILENAME=N'''+@data_path+'rsff.mdf'',  MAXSIZE = UNLIMITED, FILEGROWTH = 10%)
  LOG ON 
-( NAME = N''rsff'', FILENAME=N'''+@data_path+'rsff_log.ldf'',  MAXSIZE = UNLIMITED, FILEGROWTH = 10%)
+( NAME = N''rsff-log'', FILENAME=N'''+@data_path+'rsff_log.ldf'',  MAXSIZE = UNLIMITED, FILEGROWTH = 10%)
  COLLATE Latin1_General_CI_AS'
 )
 
