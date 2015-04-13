@@ -1,5 +1,6 @@
 A (very) brief overview of the folder structure.
 
+==== Deprecated File Structure ====
 3rdParty contains 3rd party dlls used everywhere (this is currently log4net and nUnit).
 BusinessLayer contains the business layer code.
 BusinessLayer_Tests contains unit tests for the Business Layer.
@@ -22,3 +23,8 @@ Open the SQL Management Studio with Windows Authentication and execute database 
 Set the startup project to /web and the start page to Login.aspx.
 Hit F5 and the app will come up.
 Try and login with credentials dneary_admin/dneary_admin!!.  If you cannot login take a look at c:\logs\rsff.log.
+==== END DEPRECATED =====
+
+
+
+
