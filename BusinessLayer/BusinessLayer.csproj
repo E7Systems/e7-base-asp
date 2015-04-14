@@ -47,6 +47,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Parcel.cs" />
+    <Compile Include="ParcelsBusinessLogic.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="ProjectsBusinessLogic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
