@@ -246,10 +246,43 @@ CREATE TABLE [dbo].[Projects](
 	[Notes] [varchar](max) NOT NULL,
 	[PlanCheckNumber] [int] NOT NULL,
 	[ProjectName] [varchar](255) NOT NULL,
+	[DateCreated] [datetime] NOT NULL,
 	[IsDeleted] [int] NOT NULL
 ) ON [PRIMARY]
 GO
 SET ANSI_PADDING OFF
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[Persons](
+	[PersonID] [int] IDENTITY(1,1) NOT NULL,
+	[AspNet_UsersID] [uniqueidentifier] NOT NULL,
+	[PersonName] [varchar](255) NOT NULL,
+	[Street] [varchar](255) NULL,
+	[City] [varchar](255) NULL,
+	[State] [varchar](2) NULL,
+	[Zip] [varchar](10) NULL,
+	[Phone] [varchar](255) NULL,
+	[AltPhone] [varchar](255) NULL,
+	[Email] [varchar](255) NULL,
+	[DateCreated] [datetime] NOT NULL,
+	[IsDeleted] [int] NOT NULL,
+ CONSTRAINT [PK_Persons] PRIMARY KEY CLUSTERED 
+(
+	[AspNet_UsersID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [IX_Persons] ON [dbo].[Persons] 
+(
+	[PersonID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 GO
 SET ANSI_NULLS ON
 GO
@@ -264,6 +297,96 @@ CREATE TABLE [dbo].[Parameters](
 ) ON [PRIMARY]
 GO
 SET ANSI_PADDING OFF
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+CREATE PROCEDURE [dbo].[aspnet_WebEvent_LogEvent]
+        @EventId         char(32),
+        @EventTimeUtc    datetime,
+        @EventTime       datetime,
+        @EventType       nvarchar(256),
+        @EventSequence   decimal(19,0),
+        @EventOccurrence decimal(19,0),
+        @EventCode       int,
+        @EventDetailCode int,
+        @Message         nvarchar(1024),
+        @ApplicationPath nvarchar(256),
+        @ApplicationVirtualPath nvarchar(256),
+        @MachineName    nvarchar(256),
+        @RequestUrl      nvarchar(1024),
+        @ExceptionType   nvarchar(256),
+        @Details         ntext
+AS
+BEGIN
+    INSERT
+        dbo.aspnet_WebEvent_Events
+        (
+            EventId,
+            EventTimeUtc,
+            EventTime,
+            EventType,
+            EventSequence,
+            EventOccurrence,
+            EventCode,
+            EventDetailCode,
+            Message,
+            ApplicationPath,
+            ApplicationVirtualPath,
+            MachineName,
+            RequestUrl,
+            ExceptionType,
+            Details
+        )
+    VALUES
+    (
+        @EventId,
+        @EventTimeUtc,
+        @EventTime,
+        @EventType,
+        @EventSequence,
+        @EventOccurrence,
+        @EventCode,
+        @EventDetailCode,
+        @Message,
+        @ApplicationPath,
+        @ApplicationVirtualPath,
+        @MachineName,
+        @RequestUrl,
+        @ExceptionType,
+        @Details
+    )
+END
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[Parcels](
+	[ParcelID] [int] IDENTITY(1,1) NOT NULL,
+	[APN] [varchar](255) NOT NULL,
+	[OwnerPersonID] [int] NOT NULL,
+	[Street] [varchar](255) NOT NULL,
+	[City] [varchar](255) NOT NULL,
+	[ParcelState] [varchar](2) NOT NULL,
+	[Zip] [varchar](10) NOT NULL,
+	[DateCreated] [datetime] NOT NULL,
+	[IsDeleted] [int] NOT NULL,
+ CONSTRAINT [PK_Parcels] PRIMARY KEY CLUSTERED 
+(
+	[ParcelID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [IX_Parcels_APN_Unique] ON [dbo].[Parcels] 
+(
+	[APN] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 GO
 SET ANSI_NULLS ON
 GO
@@ -422,67 +545,6 @@ CREATE PROCEDURE [dbo].[up_Project_Get_By_ProjectID]
 AS
 Select * from Projects
 Where ProjectID=@ProjectID and IsDeleted=0;
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER OFF
-GO
-CREATE PROCEDURE [dbo].[aspnet_WebEvent_LogEvent]
-        @EventId         char(32),
-        @EventTimeUtc    datetime,
-        @EventTime       datetime,
-        @EventType       nvarchar(256),
-        @EventSequence   decimal(19,0),
-        @EventOccurrence decimal(19,0),
-        @EventCode       int,
-        @EventDetailCode int,
-        @Message         nvarchar(1024),
-        @ApplicationPath nvarchar(256),
-        @ApplicationVirtualPath nvarchar(256),
-        @MachineName    nvarchar(256),
-        @RequestUrl      nvarchar(1024),
-        @ExceptionType   nvarchar(256),
-        @Details         ntext
-AS
-BEGIN
-    INSERT
-        dbo.aspnet_WebEvent_Events
-        (
-            EventId,
-            EventTimeUtc,
-            EventTime,
-            EventType,
-            EventSequence,
-            EventOccurrence,
-            EventCode,
-            EventDetailCode,
-            Message,
-            ApplicationPath,
-            ApplicationVirtualPath,
-            MachineName,
-            RequestUrl,
-            ExceptionType,
-            Details
-        )
-    VALUES
-    (
-        @EventId,
-        @EventTimeUtc,
-        @EventTime,
-        @EventType,
-        @EventSequence,
-        @EventOccurrence,
-        @EventCode,
-        @EventDetailCode,
-        @Message,
-        @ApplicationPath,
-        @ApplicationVirtualPath,
-        @MachineName,
-        @RequestUrl,
-        @ExceptionType,
-        @Details
-    )
-END
 GO
 SET ANSI_NULLS ON
 GO
@@ -884,17 +946,62 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-CREATE VIEW [dbo].[vw_aspnet_Users]
-  AS SELECT [dbo].[aspnet_Users].[ApplicationId], [dbo].[aspnet_Users].[UserId], [dbo].[aspnet_Users].[UserName], [dbo].[aspnet_Users].[LoweredUserName], [dbo].[aspnet_Users].[MobileAlias], [dbo].[aspnet_Users].[IsAnonymous], [dbo].[aspnet_Users].[LastActivityDate]
-  FROM [dbo].[aspnet_Users]
+CREATE PROCEDURE [dbo].[up_Parcel_Update]
+	@ParcelID int,
+	@APN varchar(255),
+	@OwnerPersonID int,
+	@Street varchar(255),
+	@City varchar(255),
+	@ParcelState varchar(2),
+	@Zip varchar(10)
+AS
+UPDATE Parcels 
+SET 
+APN=@APN,  
+OwnerPersonID=@OwnerPersonID,
+Street=@Street,
+City=@City,
+ParcelState=@ParcelState,
+Zip=@Zip
+WHERE ParcelID = @ParcelID and IsDeleted=0;
 GO
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-CREATE VIEW [dbo].[vw_aspnet_Roles]
-  AS SELECT [dbo].[aspnet_Roles].[ApplicationId], [dbo].[aspnet_Roles].[RoleId], [dbo].[aspnet_Roles].[RoleName], [dbo].[aspnet_Roles].[LoweredRoleName], [dbo].[aspnet_Roles].[Description]
-  FROM [dbo].[aspnet_Roles]
+CREATE PROCEDURE [dbo].[up_Parcel_SoftDelete]
+@ParcelID int
+AS
+Update Parcels SET IsDeleted = 1
+Where ParcelID=@ParcelID;
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+CREATE PROCEDURE [dbo].[up_Parcel_Insert]
+	@APN varchar(255),
+	@OwnerPersonID int,
+	@Street varchar(255),
+	@City varchar(255),
+	@ParcelState varchar(2),
+	@Zip varchar(10)
+AS
+INSERT INTO Parcels
+				(APN,  OwnerPersonID,  Street,  City, ParcelState, Zip)
+VALUES			(@APN, @OwnerPersonID, @Street, @City, @ParcelState, @Zip);   
+SELECT SCOPE_IDENTITY();
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+CREATE PROCEDURE [dbo].[up_Parcel_Get_By_ParcelID]
+	@ParcelID int
+AS
+Select * 
+FROM Parcels
+WHERE ParcelID = @ParcelID AND IsDeleted = 0;
 GO
 SET ANSI_NULLS ON
 GO
@@ -970,6 +1077,22 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
+CREATE VIEW [dbo].[vw_aspnet_Users]
+  AS SELECT [dbo].[aspnet_Users].[ApplicationId], [dbo].[aspnet_Users].[UserId], [dbo].[aspnet_Users].[UserName], [dbo].[aspnet_Users].[LoweredUserName], [dbo].[aspnet_Users].[MobileAlias], [dbo].[aspnet_Users].[IsAnonymous], [dbo].[aspnet_Users].[LastActivityDate]
+  FROM [dbo].[aspnet_Users]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+CREATE VIEW [dbo].[vw_aspnet_Roles]
+  AS SELECT [dbo].[aspnet_Roles].[ApplicationId], [dbo].[aspnet_Roles].[RoleId], [dbo].[aspnet_Roles].[RoleName], [dbo].[aspnet_Roles].[LoweredRoleName], [dbo].[aspnet_Roles].[Description]
+  FROM [dbo].[aspnet_Roles]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
 CREATE VIEW [dbo].[vw_aspnet_WebPartState_Paths]
   AS SELECT [dbo].[aspnet_Paths].[ApplicationId], [dbo].[aspnet_Paths].[PathId], [dbo].[aspnet_Paths].[Path], [dbo].[aspnet_Paths].[LoweredPath]
   FROM [dbo].[aspnet_Paths]
@@ -997,42 +1120,6 @@ GO
 CREATE VIEW [dbo].[vw_aspnet_UsersInRoles]
   AS SELECT [dbo].[aspnet_UsersInRoles].[UserId], [dbo].[aspnet_UsersInRoles].[RoleId]
   FROM [dbo].[aspnet_UsersInRoles]
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER OFF
-GO
-CREATE PROCEDURE [dbo].[aspnet_Profile_DeleteInactiveProfiles]
-    @ApplicationName        nvarchar(256),
-    @ProfileAuthOptions     int,
-    @InactiveSinceDate      datetime
-AS
-BEGIN
-    DECLARE @ApplicationId uniqueidentifier
-    SELECT  @ApplicationId = NULL
-    SELECT  @ApplicationId = ApplicationId FROM aspnet_Applications WHERE LOWER(@ApplicationName) = LoweredApplicationName
-    IF (@ApplicationId IS NULL)
-    BEGIN
-        SELECT  0
-        RETURN
-    END
-
-    DELETE
-    FROM    dbo.aspnet_Profile
-    WHERE   UserId IN
-            (   SELECT  UserId
-                FROM    dbo.aspnet_Users u
-                WHERE   ApplicationId = @ApplicationId
-                        AND (LastActivityDate <= @InactiveSinceDate)
-                        AND (
-                                (@ProfileAuthOptions = 2)
-                             OR (@ProfileAuthOptions = 0 AND IsAnonymous = 1)
-                             OR (@ProfileAuthOptions = 1 AND IsAnonymous = 0)
-                            )
-            )
-
-    SELECT  @@ROWCOUNT
-END
 GO
 SET ANSI_NULLS ON
 GO
@@ -1075,6 +1162,42 @@ CREATE VIEW [dbo].[vw_aspnet_MembershipUsers]
             [dbo].[aspnet_Users].[LastActivityDate]
   FROM [dbo].[aspnet_Membership] INNER JOIN [dbo].[aspnet_Users]
       ON [dbo].[aspnet_Membership].[UserId] = [dbo].[aspnet_Users].[UserId]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+CREATE PROCEDURE [dbo].[aspnet_Profile_DeleteInactiveProfiles]
+    @ApplicationName        nvarchar(256),
+    @ProfileAuthOptions     int,
+    @InactiveSinceDate      datetime
+AS
+BEGIN
+    DECLARE @ApplicationId uniqueidentifier
+    SELECT  @ApplicationId = NULL
+    SELECT  @ApplicationId = ApplicationId FROM aspnet_Applications WHERE LOWER(@ApplicationName) = LoweredApplicationName
+    IF (@ApplicationId IS NULL)
+    BEGIN
+        SELECT  0
+        RETURN
+    END
+
+    DELETE
+    FROM    dbo.aspnet_Profile
+    WHERE   UserId IN
+            (   SELECT  UserId
+                FROM    dbo.aspnet_Users u
+                WHERE   ApplicationId = @ApplicationId
+                        AND (LastActivityDate <= @InactiveSinceDate)
+                        AND (
+                                (@ProfileAuthOptions = 2)
+                             OR (@ProfileAuthOptions = 0 AND IsAnonymous = 1)
+                             OR (@ProfileAuthOptions = 1 AND IsAnonymous = 0)
+                            )
+            )
+
+    SELECT  @@ROWCOUNT
+END
 GO
 SET ANSI_NULLS ON
 GO
@@ -3744,9 +3867,19 @@ END
 GO
 ALTER TABLE [dbo].[aspnet_Applications] ADD  DEFAULT (newid()) FOR [ApplicationId]
 GO
+ALTER TABLE [dbo].[Projects] ADD  CONSTRAINT [DF_Projects_DateCreated]  DEFAULT (getdate()) FOR [DateCreated]
+GO
 ALTER TABLE [dbo].[Projects] ADD  CONSTRAINT [DF_Projects_IsDeleted]  DEFAULT ((0)) FOR [IsDeleted]
 GO
+ALTER TABLE [dbo].[Persons] ADD  CONSTRAINT [DF_Persons_DateCreated]  DEFAULT (getdate()) FOR [DateCreated]
+GO
+ALTER TABLE [dbo].[Persons] ADD  CONSTRAINT [DF_Persons_IsDeleted]  DEFAULT ((0)) FOR [IsDeleted]
+GO
 ALTER TABLE [dbo].[Parameters] ADD  CONSTRAINT [DF_Parameters_LastModified]  DEFAULT (getdate()) FOR [LastModified]
+GO
+ALTER TABLE [dbo].[Parcels] ADD  CONSTRAINT [DF_Parcels_DateCreated]  DEFAULT (getdate()) FOR [DateCreated]
+GO
+ALTER TABLE [dbo].[Parcels] ADD  CONSTRAINT [DF_Parcels_IsDeleted]  DEFAULT ((0)) FOR [IsDeleted]
 GO
 ALTER TABLE [dbo].[aspnet_Users] ADD  DEFAULT (newid()) FOR [UserId]
 GO
@@ -3762,8 +3895,18 @@ ALTER TABLE [dbo].[aspnet_PersonalizationPerUser] ADD  DEFAULT (newid()) FOR [Id
 GO
 ALTER TABLE [dbo].[aspnet_Membership] ADD  DEFAULT ((0)) FOR [PasswordFormat]
 GO
+ALTER TABLE [dbo].[Parcels]  WITH CHECK ADD  CONSTRAINT [FK_Parcels_Persons] FOREIGN KEY([OwnerPersonID])
+REFERENCES [dbo].[Persons] ([PersonID])
+GO
+ALTER TABLE [dbo].[Parcels] CHECK CONSTRAINT [FK_Parcels_Persons]
+GO
 ALTER TABLE [dbo].[aspnet_Users]  WITH CHECK ADD FOREIGN KEY([ApplicationId])
 REFERENCES [dbo].[aspnet_Applications] ([ApplicationId])
+GO
+ALTER TABLE [dbo].[aspnet_Users]  WITH CHECK ADD  CONSTRAINT [FK_aspnet_Users_Persons] FOREIGN KEY([UserId])
+REFERENCES [dbo].[Persons] ([AspNet_UsersID])
+GO
+ALTER TABLE [dbo].[aspnet_Users] CHECK CONSTRAINT [FK_aspnet_Users_Persons]
 GO
 ALTER TABLE [dbo].[aspnet_Paths]  WITH CHECK ADD FOREIGN KEY([ApplicationId])
 REFERENCES [dbo].[aspnet_Applications] ([ApplicationId])
@@ -3796,9 +3939,10 @@ ALTER TABLE [dbo].[aspnet_UsersInRoles]  WITH CHECK ADD FOREIGN KEY([UserId])
 REFERENCES [dbo].[aspnet_Users] ([UserId])
 GO
 
+--todo:  add genesis data here
 
 --put the database schema version in the db
-INSERT INTO Parameters(ParameterName, [Value]) Values('DBVersion', '1.0.0.2')
+INSERT INTO Parameters(ParameterName, [Value]) Values('DBVersion', '1.0.0.3')
 GO
 
 --/\*.*?\*/.*?\n
