@@ -207,37 +207,156 @@ namespace DataLayer_Tests
         } 
         #endregion
 
+        #region TestProjectSearchByAddress
+        [Test]
+        public void TestProjectSearchByAddress()
+        {
+            //fake up data
+            Random random = new Random();
 
+            string projectAddress = string.Format("Address-{0}", Guid.NewGuid().ToString());
+            string APN = String.Format("APN {0}-{1}-{2}", random.Next(0, 999), random.Next(0, 999), random.Next(0, 99));
+            string Notes = string.Format("Notes {0}.", Guid.NewGuid().ToString());
+            int planCheckNumber = random.Next(1, 9999);
+            string projectName = string.Format("Project Name {0}", Guid.NewGuid().ToString());
+
+            //insert into db
+            DaoProjects dao = new DaoProjects();
+            int projectID = dao.InsertProject(projectAddress, APN, Notes, planCheckNumber, projectName);
+
+            //verify something came back
+            Assert.Greater(projectID, 0);
+
+            //search for that address
+            DataRow row = dao.SearchProjectByAddress(projectAddress).Tables[0].Rows[0];
+
+            //verify key data matches
+            Assert.AreEqual(projectID, Convert.ToInt32(row["ProjectID"]));
+            Assert.AreEqual(projectAddress, Convert.ToString(row["Address"]));
+        } 
+        #endregion
+
+        #region TestProjectSearchByAPN
+        [Test]
+        public void TestProjectSearchByAPN()
+        {
+            //fake up data
+            Random random = new Random();
+
+            string projectAddress = string.Format("Address-{0}", Guid.NewGuid().ToString());
+            string APN = String.Format("APN {0}-{1}-{2}", random.Next(), random.Next(), random.Next());
+            string Notes = string.Format("Notes {0}.", Guid.NewGuid().ToString());
+            int planCheckNumber = random.Next(1, 9999);
+            string projectName = string.Format("Project Name {0}", Guid.NewGuid().ToString());
+
+            //insert into db
+            DaoProjects dao = new DaoProjects();
+            int projectID = dao.InsertProject(projectAddress, APN, Notes, planCheckNumber, projectName);
+
+            //verify something came back
+            Assert.Greater(projectID, 0);
+
+            //search for that APN
+            DataTable tbl = dao.SearchProjectByAPN(APN).Tables[0];
+            Assert.AreEqual(1, tbl.Rows.Count);
+            DataRow row = tbl.Rows[0];
+
+            //verify key data matches
+            Assert.AreEqual(projectID, Convert.ToInt32(row["ProjectID"]));
+            Assert.AreEqual(APN, Convert.ToString(row["APN"]));
+        } 
+        #endregion
+
+        #region TestProjectSearchByNotes
 
         [Test]
-        public void TestSearchProjectByAddress()
+        public void TestProjectSearchByNotes()
         {
-            Assert.Fail();
-        }
+            //fake up data
+            Random random = new Random();
 
-        [Test]
-        public void TestSearchProjectByAPN()
-        {
-            Assert.Fail();
-        }
+            string projectAddress = string.Format("Address-{0}", Guid.NewGuid().ToString());
+            string APN = String.Format("APN {0}-{1}-{2}", random.Next(0, 999), random.Next(0, 999), random.Next(0, 99));
+            string Notes = string.Format("Notes {0}.", Guid.NewGuid().ToString());
+            int planCheckNumber = random.Next(1, 9999);
+            string projectName = string.Format("Project Name {0}", Guid.NewGuid().ToString());
 
-        [Test]
-        public void TestSearchProjectByNotes()
-        {
-            Assert.Fail();
-        }
+            //insert into db
+            DaoProjects dao = new DaoProjects();
+            int projectID = dao.InsertProject(projectAddress, APN, Notes, planCheckNumber, projectName);
 
+            //verify something came back
+            Assert.Greater(projectID, 0);
+
+            //search for that Note
+            DataRow row = dao.SearchProjectByNotes(Notes).Tables[0].Rows[0];
+
+            //verify key data matches
+            Assert.AreEqual(projectID, Convert.ToInt32(row["ProjectID"]));
+            Assert.AreEqual(Notes, Convert.ToString(row["Notes"]));
+        }
+        
+        #endregion
+
+        #region TestSearchProjectByPlanCheckNumber
         [Test]
         public void TestSearchProjectByPlanCheckNumber()
         {
-            Assert.Fail();
-        }
+            //fake up data
+            Random random = new Random();
 
+            string projectAddress = string.Format("Address-{0}", Guid.NewGuid().ToString());
+            string APN = String.Format("APN {0}-{1}-{2}", random.Next(0, 999), random.Next(0, 999), random.Next(0, 99));
+            string Notes = string.Format("Notes {0}.", Guid.NewGuid().ToString());
+            int planCheckNumber = random.Next(1, 9999);
+            string projectName = string.Format("Project Name {0}", Guid.NewGuid().ToString());
+
+            //insert into db
+            DaoProjects dao = new DaoProjects();
+            int projectID = dao.InsertProject(projectAddress, APN, Notes, planCheckNumber, projectName);
+
+            //verify something came back
+            Assert.Greater(projectID, 0);
+
+            //search for that Note
+            DataRow row = dao.SearchProjectByPlanCheckNumber(planCheckNumber).Tables[0].Rows[0];
+
+            //verify key data matches
+            Assert.AreEqual(projectID, Convert.ToInt32(row["ProjectID"]));
+            Assert.AreEqual(planCheckNumber, Convert.ToInt32(row["PlanCheckNumber"]));
+        } 
+        #endregion
+
+        #region TestProjectSearchByProjectName
         [Test]
-        public void TestSearchProjectByProjectName()
+        public void TestProjectSearchByProjectName()
         {
-            Assert.Fail();
-        }
+            //fake up data
+            Random random = new Random();
+
+            string projectAddress = string.Format("Address-{0}", Guid.NewGuid().ToString());
+            string APN = String.Format("APN {0}-{1}-{2}", random.Next(0, 999), random.Next(0, 999), random.Next(0, 99));
+            string Notes = string.Format("Notes {0}.", Guid.NewGuid().ToString());
+            int planCheckNumber = random.Next(1, 9999);
+            string projectName = string.Format("Project Name {0}", Guid.NewGuid().ToString());
+
+            //insert into db
+            DaoProjects dao = new DaoProjects();
+            int projectID = dao.InsertProject(projectAddress, APN, Notes, planCheckNumber, projectName);
+
+            //verify something came back
+            Assert.Greater(projectID, 0);
+
+            //search for that Note
+            DataTable tbl = dao.SearchProjectByProjectName(projectName).Tables[0];
+            Assert.AreEqual(1, tbl.Rows.Count);
+            DataRow row = tbl.Rows[0];
+
+            //verify key data matches
+            Assert.AreEqual(projectID, Convert.ToInt32(row["ProjectID"]));
+            Assert.AreEqual(projectName, Convert.ToString(row["ProjectName"]));
+        } 
+        #endregion
 
 
     }

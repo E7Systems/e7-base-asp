@@ -170,34 +170,165 @@ namespace BusinessLayer_Tests
         } 
         #endregion
 
+        #region TestProjectSearchByAddress
         [Test]
-        public void TestSearchByAddress()
+        public void TestProjectSearchByAddress()
         {
-            Assert.Fail();
+            //fake up some data
+            Random random = new Random();
+            ProjectsBusinessLogic projectsBusinessLogic = new ProjectsBusinessLogic();
+            string address = string.Format("Address-{0}", Guid.NewGuid().ToString());
+            string APN = String.Format("{0}-{1}-{2}", random.Next(0, 999), random.Next(0, 999), random.Next(0, 99));
+            string notes = string.Format("Random notes for project id # {0}.", Guid.NewGuid().ToString());
+            int planCheckNumber = random.Next(1, 9999);
+            string projectName = string.Format("Project Name {0}", Guid.NewGuid().ToString());
+
+            //insert a project
+            int projectID = projectsBusinessLogic.InsertProject(address, APN, notes, planCheckNumber, projectName);
+
+            //verify success
+            Assert.Greater(projectID, 0);
+
+            //search for project
+            List<Project> projects = projectsBusinessLogic.SearchProjectByAddress(address).Item1;
+            Assert.IsNotNull(projects);
+
+            //verify only 1 came back
+            Assert.AreEqual(1, projects.Count);
+            Project project = projects[0];
+
+            //verify key data
+            Assert.AreEqual(projectID, project.ProjectID);
+            Assert.AreEqual(address, project.Address);
+
+        } 
+        #endregion
+
+        #region TestProjectSearchByAPN
+        [Test]
+        public void TestProjectSearchByAPN()
+        {
+            //fake up some data
+            Random random = new Random();
+            ProjectsBusinessLogic projectsBusinessLogic = new ProjectsBusinessLogic();
+            string address = string.Format("Address-{0}", Guid.NewGuid().ToString());
+            string APN = String.Format("{0}-{1}-{2}", random.Next(), random.Next(), random.Next());
+            string notes = string.Format("Random notes for project id # {0}.", Guid.NewGuid().ToString());
+            int planCheckNumber = random.Next(1, 9999);
+            string projectName = string.Format("Project Name {0}", Guid.NewGuid().ToString());
+
+            //insert a project
+            int projectID = projectsBusinessLogic.InsertProject(address, APN, notes, planCheckNumber, projectName);
+
+            //verify success
+            Assert.Greater(projectID, 0);
+
+            //search for project
+            List<Project> projects = projectsBusinessLogic.SearchProjectByAPN(APN).Item1;
+            Assert.IsNotNull(projects);
+
+            //verify only 1 came back
+            Assert.AreEqual(1, projects.Count);
+            Project project = projects[0];
+
+            //verify key data
+            Assert.AreEqual(projectID, project.ProjectID);
+            Assert.AreEqual(APN, project.APN);
+        } 
+        #endregion
+
+        [Test]
+        public void TestProjectSearchByPlanCheckNumber()
+        {
+            //fake up some data
+            Random random = new Random();
+            ProjectsBusinessLogic projectsBusinessLogic = new ProjectsBusinessLogic();
+            string address = string.Format("Address-{0}", Guid.NewGuid().ToString());
+            string APN = String.Format("{0}-{1}-{2}", random.Next(0, 999), random.Next(0, 999), random.Next(0, 99));
+            string notes = string.Format("Random notes for project id # {0}.", Guid.NewGuid().ToString());
+            int planCheckNumber = random.Next();
+            string projectName = string.Format("Project Name {0}", Guid.NewGuid().ToString());
+
+            //insert a project
+            int projectID = projectsBusinessLogic.InsertProject(address, APN, notes, planCheckNumber, projectName);
+
+            //verify success
+            Assert.Greater(projectID, 0);
+
+            //search for project
+            List<Project> projects = projectsBusinessLogic.SearchProjectByPlanCheckNumber(planCheckNumber).Item1;
+            Assert.IsNotNull(projects);
+
+            //verify only 1 came back
+            Assert.AreEqual(1, projects.Count);
+            Project project = projects[0];
+
+            //verify key data
+            Assert.AreEqual(projectID, project.ProjectID);
+            Assert.AreEqual(planCheckNumber, project.PlanCheckNumber); 
         }
 
         [Test]
-        public void TestSearchByAPN()
+        public void TestProjectSearchByProjectName()
         {
-            Assert.Fail();
+            //fake up some data
+            Random random = new Random();
+            ProjectsBusinessLogic projectsBusinessLogic = new ProjectsBusinessLogic();
+            string address = string.Format("Address-{0}", Guid.NewGuid().ToString());
+            string APN = String.Format("{0}-{1}-{2}", random.Next(0, 999), random.Next(0, 999), random.Next(0, 99));
+            string notes = string.Format("Random notes for project id # {0}.", Guid.NewGuid().ToString());
+            int planCheckNumber = random.Next(1, 9999);
+            string projectName = string.Format("Project Name {0}", Guid.NewGuid().ToString());
+
+            //insert a project
+            int projectID = projectsBusinessLogic.InsertProject(address, APN, notes, planCheckNumber, projectName);
+
+            //verify success
+            Assert.Greater(projectID, 0);
+
+            //search for project
+            List<Project> projects = projectsBusinessLogic.SearchProjectByProjectName(projectName).Item1;
+            Assert.IsNotNull(projects);
+
+            //verify only 1 came back
+            Assert.AreEqual(1, projects.Count);
+            Project project = projects[0];
+
+            //verify key data
+            Assert.AreEqual(projectID, project.ProjectID);
+            Assert.AreEqual(projectName, project.ProjectName);
         }
 
         [Test]
-        public void TestSearchByPlanCheckNumber()
+        public void TestProjectSearchByNotes()
         {
-            Assert.Fail();
+            //fake up some data
+            Random random = new Random();
+            ProjectsBusinessLogic projectsBusinessLogic = new ProjectsBusinessLogic();
+            string address = string.Format("Address-{0}", Guid.NewGuid().ToString());
+            string APN = String.Format("{0}-{1}-{2}", random.Next(0, 999), random.Next(0, 999), random.Next(0, 99));
+            string notes = string.Format("Random notes for project id # {0}.", Guid.NewGuid().ToString());
+            int planCheckNumber = random.Next(1, 9999);
+            string projectName = string.Format("Project Name {0}", Guid.NewGuid().ToString());
+
+            //insert a project
+            int projectID = projectsBusinessLogic.InsertProject(address, APN, notes, planCheckNumber, projectName);
+
+            //verify success
+            Assert.Greater(projectID, 0);
+
+            //search for project
+            List<Project> projects = projectsBusinessLogic.SearchProjectByNotes(notes).Item1;
+            Assert.IsNotNull(projects);
+
+            //verify only 1 came back
+            Assert.AreEqual(1, projects.Count);
+            Project project = projects[0];
+
+            //verify key data
+            Assert.AreEqual(projectID, project.ProjectID);
+            Assert.AreEqual(notes, project.Notes);
         }
 
-        [Test]
-        public void TestSearchByProjectName()
-        {
-            Assert.Fail();
-        }
-
-        [Test]
-        public void TestSearchByNotes()
-        {
-            Assert.Fail();
-        }
     }
 }
