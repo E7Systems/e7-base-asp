@@ -26,9 +26,9 @@ namespace DataLayer_Tests
         } 
         #endregion
 
-        #region TestParcelGet
+        #region TestParcelGetByProjectID
         [Test]
-        public void TestParcelGet()
+        public void TestParcelGetByProjectID()
         {
             string APN = string.Format("APN - {0}", Guid.NewGuid().ToString());
             const int OWNER_PERSON_ID = 1; //temporary until I get this wired into security properly
@@ -132,5 +132,37 @@ namespace DataLayer_Tests
             //verify created today
             Assert.AreEqual(System.DateTime.Today, Convert.ToDateTime(row["DateCreated"]).Date);
         }
+
+        #region TestParcelGetPage
+        [Test(Description = "Tests Paging Logic")]
+        public void TestParcelGetPage()
+        {
+            const int ROW_FROM = 6;
+            const int ROW_TO = 21;
+
+            DaoParcels dao = new DaoParcels();
+            DataSet ds = dao.GetParcelPage(ROW_FROM, ROW_TO);
+            Assert.AreEqual(2, ds.Tables.Count);
+            //verify 1st table has the correct number of rows of data
+            Assert.AreEqual(ROW_TO - ROW_FROM + 1, ds.Tables[0].Rows.Count);
+
+            //verify 2nd table has correct row count
+            DaoUnitTesting daoUnitTesting = new DaoUnitTesting();
+            int rowCount = daoUnitTesting.GetParcelCount();
+            Assert.Greater(rowCount, 0);
+            Assert.AreEqual(rowCount, Convert.ToInt32(ds.Tables[1].Rows[0][0]));
+        }
+        #endregion
+
+        #region TestParcelGetCount
+        [Test(Description = "Tests Count Functionality")]
+        public void TestParcelGetCount()
+        {
+            DaoUnitTesting dao = new DaoUnitTesting();
+            int rowCount = dao.GetParcelCount();
+            Assert.Greater(rowCount, 0);
+
+        }
+        #endregion
     }
 }

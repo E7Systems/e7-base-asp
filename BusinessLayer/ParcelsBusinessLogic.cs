@@ -1,6 +1,7 @@
 ﻿using log4net;
 using Rsff.DataLayer;
 using System;
+using System.Collections.Generic;
 using System.Data;
 
 namespace Rsff.BusinessLayer
@@ -8,6 +9,40 @@ namespace Rsff.BusinessLayer
     public class ParcelsBusinessLogic
     {
         private static readonly ILog m_logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        #region GetParcelPage
+        //gets a single page of data
+        public Tuple<List<Parcel>, int> GetParcelPage(int currentPage, int rowsPerPage)
+        {
+            int row_From = (currentPage - 1) * rowsPerPage + 1;
+            int row_To = row_From + rowsPerPage - 1;
+
+            DaoParcels dao = new DaoParcels();
+            //this dataset returns 2 data tables
+            //i am doing this to avoid making 2 trips to the db
+            //1 for the data
+            //1 for the row count
+            DataSet ds = dao.GetParcelPage(row_From, row_To);
+
+            List<Parcel> parcels = new List<Parcel>();
+
+            //1st table for the data
+            DataTable tbl = ds.Tables[0];
+            for (int i = 0; i < tbl.Rows.Count; i++)
+            {
+                DataRow row = tbl.Rows[i];
+                Parcel parcel = mapDataRowToParcel(row);
+                parcels.Add(parcel);
+            }
+
+            //2nd table for the row count
+            tbl = ds.Tables[1];
+            int rowCount = Convert.ToInt32(tbl.Rows[0][0]);
+
+            return Tuple.Create<List<Parcel>, int>(parcels, rowCount);
+
+        }
+        #endregion
 
         #region InsertParcel
         public int InsertParcel(string APN, int ownerPersonID, string street, string city, string state, string zip)

@@ -9,9 +9,9 @@ namespace BusinessLayer_Tests
     public class Tests_ProjectsBusinessLogic
     {
 
-        #region TestGetProjectPage
+        #region TestProjectGetPage
         [Test]
-        public void TestGetProjectPage()
+        public void TestProjectGetPage()
         {
             const int CURRENT_PAGE = 2;
             const int ROWS_PER_PAGE = 10;
@@ -23,26 +23,14 @@ namespace BusinessLayer_Tests
             Assert.AreEqual(ROWS_PER_PAGE, projectsPage.Item1.Count);
 
             //verify total count in projects table is correct
-            int projectCount = projectsBusinessLogic.GetProjectsCount();
-            Assert.AreEqual(projectCount, projectsPage.Item2);
+            //int projectCount = projectsBusinessLogic.GetProjectsCount();
+            //Assert.AreEqual(projectCount, projectsPage.Item2);
         } 
         #endregion
 
-        #region TestGetProjectCount
-        //used in unit testing
-        //move this into unit testing db 
+        #region TestProjectGetByProjectID
         [Test]
-        public void TestGetProjectCount()
-        {
-            ProjectsBusinessLogic projectsBusinessLogic = new ProjectsBusinessLogic();
-            int projectCount = projectsBusinessLogic.GetProjectsCount();
-            Assert.Greater(projectCount, 0);
-        } 
-        #endregion
-
-        #region TestGetProjectByProjectID
-        [Test]
-        public void TestGetProjectByProjectID()
+        public void TestProjectGetByProjectID()
         {
             //fake up some data
             Random random = new Random();

@@ -121,6 +121,37 @@ namespace Rsff.DataLayer
             }
         } 
         #endregion
-    
+
+        #region GetParcelPage
+        //returns 2 data tables
+        //1st data table contains a page of data
+        //2nd data table is a 1 row, 1 column data table which is the count of rows in entire table.  
+        //this is used for paging.  I retrieve it so i only make 1 trip to the db
+        public DataSet GetParcelPage(int rowFrom, int rowTo)
+        {
+            const string PROC = "[dbo].[up_Parcel_Get_Page]";
+            DataSet ds = new DataSet();
+            using (SqlConnection conn = new SqlConnection(m_ConnectionString))
+            {
+                using (SqlDataAdapter adapter = new SqlDataAdapter())
+                {
+                    using (SqlCommand command = new SqlCommand())
+                    {
+                        command.CommandType = System.Data.CommandType.StoredProcedure;
+                        command.CommandText = PROC;
+                        command.Parameters.AddWithValue("@rowFrom", rowFrom);
+                        command.Parameters.AddWithValue("@rowTo", rowTo);
+                        conn.Open();
+                        command.Connection = conn;
+                        adapter.SelectCommand = command;
+                        adapter.Fill(ds);
+                        conn.Close();
+                        return ds;
+                    }
+                }
+            }
+        }
+        #endregion
+
     }
 }

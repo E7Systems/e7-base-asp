@@ -75,14 +75,6 @@ namespace Rsff.BusinessLayer
         } 
         #endregion
 
-        //move this into unit testing project
-        //gets a count of the total number of non-deleted projects in the db
-        public int GetProjectsCount()
-        {
-            DaoProjects dao = new DaoProjects();
-            return dao.GetProjectsCount();
-        }
-
         #region SoftDeleteProject
         public bool SoftDeleteProject(int projectID)
         {

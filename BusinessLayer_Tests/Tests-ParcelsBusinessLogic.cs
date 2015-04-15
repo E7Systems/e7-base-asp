@@ -1,11 +1,12 @@
 ﻿using NUnit.Framework;
 using Rsff.BusinessLayer;
 using System;
+using System.Collections.Generic;
 
 namespace BusinessLayer_Tests
 {
     [TestFixture]
-    public class Tests_ParcelBusinessLogic
+    public class Tests_ParcelsBusinessLogic
     {
 
         #region TestParcelInsert
@@ -27,9 +28,9 @@ namespace BusinessLayer_Tests
         } 
         #endregion
 
-        #region TestParcelGet
+        #region TestParcelGetByParcelID
         [Test]
-        public void TestParcelGet()
+        public void TestParcelGetByParcelID()
         {
             ParcelsBusinessLogic parcelsBusinessLogic = new ParcelsBusinessLogic();
 
@@ -86,9 +87,9 @@ namespace BusinessLayer_Tests
         } 
         #endregion
 
-        #region TestUpdateParcel
+        #region TestParcelUpdate
         [Test]
-        public void TestUpdateParcel()
+        public void TestParcelUpdate()
         {
             ParcelsBusinessLogic parcelsBusinessLogic = new ParcelsBusinessLogic();
 
@@ -127,5 +128,24 @@ namespace BusinessLayer_Tests
         } 
         #endregion
 
+        #region TestParcelGetPage
+        [Test]
+        public void TestParcelGetPage()
+        {
+            const int CURRENT_PAGE = 2;
+            const int ROWS_PER_PAGE = 10;
+
+            ParcelsBusinessLogic parcelsBusinessLogic = new ParcelsBusinessLogic();
+            Tuple<List<Parcel>, int> parcelsPage = parcelsBusinessLogic.GetParcelPage(CURRENT_PAGE, ROWS_PER_PAGE);
+
+            //verify rows per page is correct
+            Assert.AreEqual(ROWS_PER_PAGE, parcelsPage.Item1.Count);
+
+            //verify total count in parcels table is correct
+            //int parcelCount = parcelsBusinessLogic.GetParcelsCount();
+            //Assert.AreEqual(parcelCount, parcelsPage.Item2);
+        }
+        #endregion
+    
     }
 }

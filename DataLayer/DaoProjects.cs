@@ -66,30 +66,6 @@ namespace Rsff.DataLayer
         }
         #endregion
 
-        //move this to the unit testing db
-        //returns count of non soft deleted records
-        public int GetProjectsCount()
-        {
-            const string PROC = "[dbo].[up_Project_Get_Count]";
-            using (SqlConnection conn = new SqlConnection(m_ConnectionString))
-            {
-                using (SqlDataAdapter adapter = new SqlDataAdapter())
-                {
-                    using (SqlCommand command = new SqlCommand())
-                    {
-                        command.CommandType = System.Data.CommandType.StoredProcedure;
-                        command.CommandText = PROC;
-                        conn.Open();
-                        command.Connection = conn;
-                        adapter.SelectCommand = command;
-                        object rowCount = command.ExecuteScalar();
-                        conn.Close();
-                        return Convert.ToInt32(rowCount);
-                    }
-                }
-            }
-        }
-
         #region InsertProject
         //inserts a project.  returns projectID
         public int InsertProject(string address, string APN, string notes, int planCheckNumber, string projectName)

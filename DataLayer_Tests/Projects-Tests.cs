@@ -41,20 +41,20 @@ namespace DataLayer_Tests
         } 
         #endregion
 
-        #region TestGetProjectCount
+        #region TestProjectGetCount
         [Test(Description = "Tests Count Functionality")]
-        public void TestGetProjectCount()
+        public void TestProjectGetCount()
         {
-            DaoProjects dao = new DaoProjects();
+            DaoUnitTesting dao = new DaoUnitTesting();
             int rowCount = dao.GetProjectsCount();
             Assert.Greater(rowCount, 0);
 
         } 
         #endregion
 
-        #region TestGetProjectPage
+        #region TestProjectGetPage
         [Test(Description = "Tests Paging Logic")]
-        public void TestGetProjectPage()
+        public void TestProjectGetPage()
         {
             const int ROW_FROM = 5;
             const int ROW_TO = 14;
@@ -66,7 +66,8 @@ namespace DataLayer_Tests
             Assert.AreEqual(ROW_TO - ROW_FROM + 1, ds.Tables[0].Rows.Count);
 
             //verify 2nd table has correct row count
-            int rowCount = dao.GetProjectsCount();
+            DaoUnitTesting daoUnitTesting = new DaoUnitTesting();
+            int rowCount = daoUnitTesting.GetProjectsCount();
             Assert.Greater(rowCount, 0);
             Assert.AreEqual(rowCount, Convert.ToInt32(ds.Tables[1].Rows[0][0]));
         } 
@@ -133,9 +134,9 @@ namespace DataLayer_Tests
         } 
         #endregion
 
-        #region TestGetProjectByProjectID
+        #region TestProjectGetByProjectID
         [Test]
-        public void TestGetProjectByProjectID()
+        public void TestProjectGetByProjectID()
         {
             //fake up data
             Random random = new Random();
