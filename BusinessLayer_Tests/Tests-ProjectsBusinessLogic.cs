@@ -237,6 +237,7 @@ namespace BusinessLayer_Tests
         } 
         #endregion
 
+        #region TestProjectSearchByPlanCheckNumber
         [Test]
         public void TestProjectSearchByPlanCheckNumber()
         {
@@ -265,9 +266,11 @@ namespace BusinessLayer_Tests
 
             //verify key data
             Assert.AreEqual(projectID, project.ProjectID);
-            Assert.AreEqual(planCheckNumber, project.PlanCheckNumber); 
-        }
+            Assert.AreEqual(planCheckNumber, project.PlanCheckNumber);
+        } 
+        #endregion
 
+        #region TestProjectSearchByProjectName
         [Test]
         public void TestProjectSearchByProjectName()
         {
@@ -297,8 +300,10 @@ namespace BusinessLayer_Tests
             //verify key data
             Assert.AreEqual(projectID, project.ProjectID);
             Assert.AreEqual(projectName, project.ProjectName);
-        }
+        } 
+        #endregion
 
+        #region TestProjectSearchByNotes
         [Test]
         public void TestProjectSearchByNotes()
         {
@@ -328,7 +333,8 @@ namespace BusinessLayer_Tests
             //verify key data
             Assert.AreEqual(projectID, project.ProjectID);
             Assert.AreEqual(notes, project.Notes);
-        }
+        } 
+        #endregion
 
     }
 }
