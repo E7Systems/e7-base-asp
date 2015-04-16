@@ -98,7 +98,7 @@ namespace web_mvc.Controllers
         public ActionResult Create()
         {
             m_logger.DebugFormat("Entering Create Action (Get)");
-            ParcelCreateOrEdit parcelCreate = new ParcelCreateOrEdit();
+            ParcelCreate parcelCreate = new ParcelCreate();
             //TEMPORARY:  wire this into security properly
             const int OWNER_PERSON_ID = 1;
             parcelCreate.Parcel.OwnerPersonID = OWNER_PERSON_ID;
@@ -109,7 +109,7 @@ namespace web_mvc.Controllers
         #region Create Action (Post)
         // POST /Parcel/Create
         [HttpPost]
-        public ActionResult Create(ParcelCreateOrEdit form)
+        public ActionResult Create(ParcelCreate form)
         {
             m_logger.DebugFormat("Entering Create Action (Post)");
 

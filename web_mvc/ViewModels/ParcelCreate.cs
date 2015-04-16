@@ -2,10 +2,10 @@
 
 namespace web_mvc.ViewModels
 {
-    public class ParcelCreateOrEdit
+    public class ParcelCreate
     {
         public Parcel Parcel { get; set; }
-        public ParcelCreateOrEdit()
+        public ParcelCreate()
         {
             this.Parcel = new Parcel();
         }
