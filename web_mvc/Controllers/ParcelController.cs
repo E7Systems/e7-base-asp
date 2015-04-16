@@ -1,13 +1,12 @@
-﻿using System;
+﻿using log4net;
+using Rsff.BusinessLayer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using log4net;
-using Rsff.BusinessLayer;
 using System.Linq.Dynamic;
-using web_mvc.ViewModels;
+using System.Web.Mvc;
 using web_mvc.Infrastructure;
+using web_mvc.ViewModels;
 
 namespace web_mvc.Controllers
 {
@@ -17,7 +16,8 @@ namespace web_mvc.Controllers
         private static readonly ILog m_logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private const int PROJECTS_PER_PAGE = 10;
 
-        // GET: Parcel
+        #region Index Action (GET)
+        // GET: /Parcel
         // Displays a page of parcels
 
         public ActionResult Index(int page = 1, string sortOrder = "Asc", string sortBy = "APN")
@@ -90,6 +90,49 @@ namespace web_mvc.Controllers
             return View(parcelIndex);
             #endregion
 
+        } 
+        #endregion
+
+        #region Create Action (GET)
+        // GET /Parcel/Create
+        public ActionResult Create()
+        {
+            m_logger.DebugFormat("Entering Create Action (Get)");
+            ParcelCreateOrEdit parcelCreate = new ParcelCreateOrEdit();
+            //TEMPORARY:  wire this into security properly
+            const int OWNER_PERSON_ID = 1;
+            parcelCreate.Parcel.OwnerPersonID = OWNER_PERSON_ID;
+            return View(parcelCreate);
+        } 
+        #endregion
+
+        #region Create Action (Post)
+        // POST /Parcel/Create
+        [HttpPost]
+        public ActionResult Create(ParcelCreateOrEdit form)
+        {
+            m_logger.DebugFormat("Entering Create Action (Post)");
+
+            if (ModelState.IsValid)
+            {
+                m_logger.DebugFormat("Create Action, attempting to insert new project with data values: {0}", form.Parcel.ToString());
+                ParcelsBusinessLogic parcelsBusinessLogic = new ParcelsBusinessLogic();
+                int parcelID = parcelsBusinessLogic.InsertParcel(form.Parcel.APN, form.Parcel.OwnerPersonID, form.Parcel.Street, form.Parcel.City, form.Parcel.State, form.Parcel.Zip);
+                bool success = parcelID > 0;
+                m_logger.DebugFormat("projectsBusinessLogic.InsertProject returned : {0}", parcelID);
+                if (success)
+                {
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    ModelState.AddModelError("APN", "Saving New Parcel Failed");
+                    return View(form);
+                }
+            }
+
+            return View(form);
         }
+        #endregion
     }
 }

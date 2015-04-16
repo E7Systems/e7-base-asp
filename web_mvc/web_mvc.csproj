@@ -137,6 +137,7 @@
     <Compile Include="Infrastructure\PagedData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\LoginIndex.cs" />
+    <Compile Include="ViewModels\ParcelCreate.cs" />
     <Compile Include="ViewModels\ParcelIndex.cs" />
     <Compile Include="ViewModels\ProjectEdit.cs" />
     <Compile Include="ViewModels\ProjectIndex.cs" />
@@ -158,6 +159,7 @@
     <Content Include="Views\Project\Edit.cshtml" />
     <Content Include="Views\Parcel\Index.cshtml" />
     <Content Include="Scripts\jquery-2.1.3.min.map" />
+    <Content Include="Views\Parcel\Create.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

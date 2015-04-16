@@ -1,0 +1,49 @@
+﻿@model web_mvc.ViewModels.ParcelCreate
+
+<h1>Create Parcel</h1>
+
+@using (Html.BeginForm("Create", "Parcel"))
+{
+  
+    @Html.AntiForgeryToken();
+
+        @Html.HiddenFor(mdl => mdl.Parcel.OwnerPersonID)
+    
+        <div class="row">
+            <div class="col col-lg-8">
+                @Html.ValidationSummary()
+                <div class="form-group">
+                    @Html.LabelFor(mdl => mdl.Parcel.APN)
+                    @Html.TextBoxFor(mdl => mdl.Parcel.APN, new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(mdl => mdl.Parcel.Street)
+                    @Html.TextBoxFor(mdl => mdl.Parcel.Street, new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(mdl => mdl.Parcel.City)
+                    @Html.TextBoxFor(mdl => mdl.Parcel.City, new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(mdl => mdl.Parcel.State)
+                    @Html.TextBoxFor(mdl => mdl.Parcel.State, new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(mdl => mdl.Parcel.Zip)
+                    @Html.TextBoxFor(mdl => mdl.Parcel.Zip, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col col-lg-4">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        Parcel Actions
+                    </div>
+                    <div class="panel-body">
+                        <input type="submit" value="Save Parcel" class="btn btn-success btn-sm" />
+                        <a href="@Url.Action("Index")">Or Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+}
