@@ -108,7 +108,7 @@ namespace web_mvc.Controllers
 
         #region Create Action (Post)
         // POST /Parcel/Create
-        [HttpPost]
+        [HttpPost, ValidateAntiForgeryToken]
         public ActionResult Create(ParcelCreate form)
         {
             m_logger.DebugFormat("Entering Create Action (Post)");
@@ -132,6 +132,71 @@ namespace web_mvc.Controllers
             }
 
             return View(form);
+        }
+        #endregion
+
+        #region Edit Action (GET)
+        // GET /Parcel/Edit/ID
+        public ActionResult Edit(int parcelID)
+        {
+            m_logger.DebugFormat("Entering Edit Action (Get)");
+            ParcelEdit parcelEdit = new ParcelEdit();
+            ParcelsBusinessLogic parcelsBusinessLogic = new ParcelsBusinessLogic();
+            Parcel parcel = parcelsBusinessLogic.GetParcelByParcelID(parcelID);
+
+            //TEMPORARY:  wire this into security properly
+            const int OWNER_PERSON_ID = 1;
+            parcelEdit.Parcel.OwnerPersonID = OWNER_PERSON_ID;
+            parcelEdit.Parcel = parcel;
+            return View(parcelEdit);
+        }
+        #endregion
+
+        #region Edit Action (Post)
+        // POST /Parcel/Create
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult Edit(ParcelEdit form)
+        {
+            m_logger.DebugFormat("Entering Edit Action (Post)");
+
+            if (ModelState.IsValid)
+            {
+                m_logger.DebugFormat("Create Action, attempting to insert new project with data values: {0}", form.Parcel.ToString());
+                ParcelsBusinessLogic parcelsBusinessLogic = new ParcelsBusinessLogic();
+                bool success = parcelsBusinessLogic.UpdateParcel(form.Parcel.ParcelID, form.Parcel.APN, form.Parcel.OwnerPersonID, form.Parcel.Street, form.Parcel.City, form.Parcel.State, form.Parcel.Zip);
+
+                m_logger.DebugFormat("projectsBusinessLogic.UpdateProject returned : {0}", success);
+                if (success)
+                {
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    ModelState.AddModelError("APN", "Saving New Parcel Failed");
+                    return View(form);
+                }
+            }
+
+            return View(form);
+        }
+        #endregion
+
+        #region Delete Action (Post)
+        [HttpPost]//  TODO, add ValidateAntiForgeryToken
+        public ActionResult Delete(int parcelID)
+        {
+            ParcelsBusinessLogic parcelsBusinessLogic = new ParcelsBusinessLogic();
+            bool success = parcelsBusinessLogic.SoftDeleteParcel(parcelID);
+            m_logger.DebugFormat("parcelsBusinessLogic.SoftDeleteParcel returned : {0}", success);
+            if (success)
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                ModelState.AddModelError("Address", "Deleting Parcel Failed");
+                return View();
+            }
         }
         #endregion
     }

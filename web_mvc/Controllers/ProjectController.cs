@@ -212,7 +212,7 @@ namespace web_mvc.Controllers
         #endregion
 
         #region Delete Action (Post)
-        [HttpPost]
+        [HttpPost, ValidateAntiForgeryToken]
         public ActionResult Delete(int projectID)
         {
             ProjectsBusinessLogic projectsBusinessLogic = new ProjectsBusinessLogic();
