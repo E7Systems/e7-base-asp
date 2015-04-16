@@ -39,7 +39,7 @@ namespace web_mvc.Controllers
                     bool isSuperAdmin = Roles.IsUserInRole(userName, "superadmin");
 
                     m_logger.InfoFormat("Successful login for User: {0}, isEndUser:{1}, isAdmin: {2}, isSuperAdmin:{3}", userName, isEndUser, isAdmin, isSuperAdmin);
-                    return RedirectToRoute("project");
+                    return RedirectToRoute("parcel");
                 }
                 else
                 {

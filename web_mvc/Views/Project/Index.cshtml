@@ -22,8 +22,7 @@
         }
         else
         {
-            <a href="#" class="btn btn-default btn-disabled btn-sm">
-                <i class="glyphicon glyphicon-chevron-left"></i>Previous Page</a>
+            <a href="#" class="btn btn-default btn-disabled btn-sm"><i class="glyphicon glyphicon-chevron-left"></i>Previous Page</a>
         }
     </div>
     <div class="btn btn-group pull-right">
@@ -34,8 +33,7 @@
         }
         else
         {
-            <a href="#" class="btn btn-default btn-disabled btn-sm">Next Page
-                Next Page<i class="glyphicon glyphicon-chevron-right"></i></a>
+            <a href="#" class="btn btn-default btn-disabled btn-sm">Next Page<i class="glyphicon glyphicon-chevron-right"></i></a>
         }
     </div>
     <div class="btn btn-group pull-right">
@@ -76,32 +74,4 @@
     }
 
 </table>
-}
-
-@*move this into a dedicated scripts folder after the script bundle infrastructure is fully fleshed out*@
-@section Scripts                                            
-{
-    <script>                                                    //script used by Delete Action.  Converts http get to post with a Confirm() dialog.
-        $(document).ready(                                      //after document is ready
-            function ()
-            {                      
-                $("a[data-confirm]").                              //look for all anchor tags that have our custom data-post attribute
-                    click(function (e)                          //when clicked
-                    {
-                        e.preventDefault();                     //prevent navigating to original href
-
-                        var $this = $(this);
-                        var message = $this.data("confirm");       //extract message
-
-                        if (message && !confirm(message))       //if no confirm, return
-                            return;
-
-                     $("<form>")                                //create form
-                    .attr("method", "post")                     //to be posted
-                    .attr("action", $this.attr("href"))         //to original href
-                    .appendTo(document.body)                    //append it to existing document
-                    .submit();                                  //and post it
-                    })
-            });
-    </script>
 }

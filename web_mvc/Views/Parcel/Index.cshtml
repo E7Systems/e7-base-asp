@@ -1,0 +1,82 @@
+﻿@model web_mvc.ViewModels.ParcelIndex
+
+@Html.AntiForgeryToken()
+
+<h1>Parcels</h1>
+
+@using (Html.BeginForm("Index", "Parcel"))
+{
+
+    <div class="btn-toolbar">
+        <div class="btn-group">
+            <button class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-search"></i>Search</button>
+        </div>
+        <div class="btn btn-group pull-right">
+            @if (Model.Parcels.HasPreviousPage)
+            {
+
+                <a href="@Url.Action("Index", new { page = Model.Parcels.PreviousPage })" class="btn btn-primary btn-sm">
+                    <i class="glyphicon glyphicon-chevron-left"></i>Previous Page
+                </a>
+            }
+            else
+            {
+                <a href="#" class="btn btn-default btn-disabled btn-sm">
+                    <i class="glyphicon glyphicon-chevron-left"></i>Previous Page
+                </a>
+            }
+        </div>
+        <div class="btn btn-group pull-right">
+            @if (Model.Parcels.HasNextPage)
+            {
+                <a href="@Url.Action("Index", new { page = Model.Parcels.NextPage })" class="btn btn-primary btn-sm">
+                    Next Page<i class="glyphicon glyphicon-chevron-right"></i>
+                </a>
+            }
+            else
+            {
+                <a href="#" class="btn btn-default btn-disabled btn-sm">
+                    Next Page<i class="glyphicon glyphicon-chevron-right"></i>
+                </a>
+            }
+        </div>
+        <div class="btn btn-group pull-right">
+            <a href="@Url.Action("Create")" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-plus"></i>Create Parcel</a>
+        </div>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                @*this can be done in a loop when I write a method that spits out property names as a property*@
+                <th><a href="@Url.Action("Index", new { page = Model.Parcels.Page, SortOrder = Model.SortOrder, SortBy = "APN" })">APN</a></th>
+                <th><a href="@Url.Action("Index", new { page = Model.Parcels.Page, SortOrder = Model.SortOrder, SortBy = "Street" })">Street</a></th>
+                <th><a href="@Url.Action("Index", new { page = Model.Parcels.Page, SortOrder = Model.SortOrder, SortBy = "City" })">City</a></th>
+                <th><a href="@Url.Action("Index", new { page = Model.Parcels.Page, SortOrder = Model.SortOrder, SortBy = "State" })">State</a></th>
+                <th><a href="@Url.Action("Index", new { page = Model.Parcels.Page, SortOrder = Model.SortOrder, SortBy = "Zip" })">Zip</a></th>
+                <th colspan="2" align="center">Actions</th>
+            </tr>
+            <tr>
+                <th><input type="text" class="form-control" name="APNSearchTerm" /></th>
+                <th><input type="text" class="form-control" name="StreetSearchTerm" /></th>
+                <th><input type="text" class="form-control" name="CitySearchTerm" /></th>
+                <th><input type="text" class="form-control" name="StateSearchTerm" /></th>
+                <th><input type="text" class="form-control" name="ZipSearchTerm" /></th>
+            </tr>
+
+        </thead>
+        @foreach (var parcel in Model.Parcels)
+        {
+            <tr>
+                <td> @parcel.APN</td>
+                <td> @parcel.Street</td>
+                <td> @parcel.City</td>
+                <td> @parcel.State</td>
+                <td> @parcel.Zip</td>
+                <td><a href="@Url.Action("Edit", new {parcel.ParcelID})" class="btn btn-primary btn-xs">Edit<i class="glyphicon glyphicon-edit"></i></a></td>
+                <td><a href="@Url.Action("Delete", new {parcel.ParcelID})" data-confirm="Are you sure you want to delete this Parcel?" class="btn btn-primary btn-xs">Delete<i class="glyphicon glyphicon-trash"></i></a></td>
+            </tr>
+        }
+
+    </table>
+}

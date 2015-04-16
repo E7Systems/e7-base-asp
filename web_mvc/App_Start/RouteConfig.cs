@@ -14,7 +14,12 @@ namespace web_mvc
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             //explicitly set routes here - gives flexibility while doing early controller development
-            //TEMPORARY
+
+            routes.MapRoute(
+                name: "parcel",
+                url: "parcel",
+                defaults: new { controller = "Parcel", action = "Index" }
+            );
 
             routes.MapRoute(
                 name: "project",
@@ -32,6 +37,7 @@ namespace web_mvc
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Login", action = "Index", id = UrlParameter.Optional });
+
         }
     }
 }
