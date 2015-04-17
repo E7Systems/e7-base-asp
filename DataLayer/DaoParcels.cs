@@ -153,5 +153,135 @@ namespace Rsff.DataLayer
         }
         #endregion
 
+        #region SearchParcelByAPN
+        public DataSet SearchParcelByAPN(string APN)
+        {
+            const string PROC = "[dbo].[up_Parcel_Search_By_APN]";
+            DataSet ds = new DataSet();
+            using (SqlConnection conn = new SqlConnection(m_ConnectionString))
+            {
+                using (SqlDataAdapter adapter = new SqlDataAdapter())
+                {
+                    using (SqlCommand command = new SqlCommand())
+                    {
+                        command.CommandType = System.Data.CommandType.StoredProcedure;
+                        command.CommandText = PROC;
+                        command.Parameters.AddWithValue("@APN", APN);
+                        conn.Open();
+                        command.Connection = conn;
+                        adapter.SelectCommand = command;
+                        adapter.Fill(ds);
+                        conn.Close();
+                        return ds;
+                    }
+                }
+            }
+        }  
+        #endregion
+
+        #region SearchParcelByStreet
+        public DataSet SearchParcelByStreet(string street)
+        {
+            const string PROC = "[dbo].[up_Parcel_Search_By_Street]";
+            DataSet ds = new DataSet();
+            using (SqlConnection conn = new SqlConnection(m_ConnectionString))
+            {
+                using (SqlDataAdapter adapter = new SqlDataAdapter())
+                {
+                    using (SqlCommand command = new SqlCommand())
+                    {
+                        command.CommandType = System.Data.CommandType.StoredProcedure;
+                        command.CommandText = PROC;
+                        command.Parameters.AddWithValue("@Street", street);
+                        conn.Open();
+                        command.Connection = conn;
+                        adapter.SelectCommand = command;
+                        adapter.Fill(ds);
+                        conn.Close();
+                        return ds;
+                    }
+                }
+            }
+        } 
+        #endregion
+
+        #region SearchParcelByCity
+        public DataSet SearchParcelByCity(string city)
+        {
+            const string PROC = "[dbo].[up_Parcel_Search_By_City]";
+            DataSet ds = new DataSet();
+            using (SqlConnection conn = new SqlConnection(m_ConnectionString))
+            {
+                using (SqlDataAdapter adapter = new SqlDataAdapter())
+                {
+                    using (SqlCommand command = new SqlCommand())
+                    {
+                        command.CommandType = System.Data.CommandType.StoredProcedure;
+                        command.CommandText = PROC;
+                        command.Parameters.AddWithValue("@City", city);
+                        conn.Open();
+                        command.Connection = conn;
+                        adapter.SelectCommand = command;
+                        adapter.Fill(ds);
+                        conn.Close();
+                        return ds;
+                    }
+                }
+            }
+        } 
+        #endregion
+ 
+        #region SearchParcelByState
+
+        public DataSet SearchParcelByState(string state)
+        {
+            const string PROC = "[dbo].[up_Parcel_Search_By_State]";
+            DataSet ds = new DataSet();
+            using (SqlConnection conn = new SqlConnection(m_ConnectionString))
+            {
+                using (SqlDataAdapter adapter = new SqlDataAdapter())
+                {
+                    using (SqlCommand command = new SqlCommand())
+                    {
+                        command.CommandType = System.Data.CommandType.StoredProcedure;
+                        command.CommandText = PROC;
+                        command.Parameters.AddWithValue("@State", state);
+                        conn.Open();
+                        command.Connection = conn;
+                        adapter.SelectCommand = command;
+                        adapter.Fill(ds);
+                        conn.Close();
+                        return ds;
+                    }
+                }
+            }
+        } 
+        #endregion
+
+        #region SearchParcelByZip
+        public DataSet SearchParcelByZip(string zip)
+        {
+            const string PROC = "[dbo].[up_Parcel_Search_By_Zip]";
+            DataSet ds = new DataSet();
+            using (SqlConnection conn = new SqlConnection(m_ConnectionString))
+            {
+                using (SqlDataAdapter adapter = new SqlDataAdapter())
+                {
+                    using (SqlCommand command = new SqlCommand())
+                    {
+                        command.CommandType = System.Data.CommandType.StoredProcedure;
+                        command.CommandText = PROC;
+                        command.Parameters.AddWithValue("@Zip", zip);
+                        conn.Open();
+                        command.Connection = conn;
+                        adapter.SelectCommand = command;
+                        adapter.Fill(ds);
+                        conn.Close();
+                        return ds;
+                    }
+                }
+            }
+        } 
+        #endregion
     }
 }

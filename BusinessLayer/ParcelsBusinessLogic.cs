@@ -99,5 +99,150 @@ namespace Rsff.BusinessLayer
             return parcel;
         } 
         #endregion
+
+        #region SearchParcelByAPN
+        public Tuple<List<Parcel>, int> SearchParcelByAPN(string APN)
+        {
+            DaoParcels dao = new DaoParcels();
+            //this dataset returns 2 data tables
+            //i am doing this to avoid making 2 trips to the db
+            //1 for the data
+            //1 for the row count
+
+            DataSet ds = dao.SearchParcelByAPN(APN);
+            List<Parcel> parcels = new List<Parcel>();
+
+            //1st table for the data
+            DataTable tbl = ds.Tables[0];
+            for (int i = 0; i < tbl.Rows.Count; i++)
+            {
+                DataRow row = tbl.Rows[i];
+                Parcel project = mapDataRowToParcel(row);
+                parcels.Add(project);
+            }
+
+            //2nd table for the row count
+            tbl = ds.Tables[1];
+            int rowCount = Convert.ToInt32(tbl.Rows[0][0]);
+
+            return Tuple.Create<List<Parcel>, int>(parcels, rowCount);
+        } 
+        #endregion
+
+        #region SearchParcelByStreet
+        public Tuple<List<Parcel>, int> SearchParcelByStreet(string street)
+        {
+            DaoParcels dao = new DaoParcels();
+            //this dataset returns 2 data tables
+            //i am doing this to avoid making 2 trips to the db
+            //1 for the data
+            //1 for the row count
+
+            DataSet ds = dao.SearchParcelByStreet(street);
+            List<Parcel> parcels = new List<Parcel>();
+
+            //1st table for the data
+            DataTable tbl = ds.Tables[0];
+            for (int i = 0; i < tbl.Rows.Count; i++)
+            {
+                DataRow row = tbl.Rows[i];
+                Parcel parcel = mapDataRowToParcel(row);
+                parcels.Add(parcel);
+            }
+
+            //2nd table for the row count
+            tbl = ds.Tables[1];
+            int rowCount = Convert.ToInt32(tbl.Rows[0][0]);
+
+            return Tuple.Create<List<Parcel>, int>(parcels, rowCount);
+        }
+        #endregion
+
+        #region SearchParcelByCity
+        public Tuple<List<Parcel>, int> SearchParcelByCity(string city)
+        {
+            DaoParcels dao = new DaoParcels();
+            //this dataset returns 2 data tables
+            //i am doing this to avoid making 2 trips to the db
+            //1 for the data
+            //1 for the row count
+
+            DataSet ds = dao.SearchParcelByCity(city);
+            List<Parcel> parcels = new List<Parcel>();
+
+            //1st table for the data
+            DataTable tbl = ds.Tables[0];
+            for (int i = 0; i < tbl.Rows.Count; i++)
+            {
+                DataRow row = tbl.Rows[i];
+                Parcel parcel = mapDataRowToParcel(row);
+                parcels.Add(parcel);
+            }
+
+            //2nd table for the row count
+            tbl = ds.Tables[1];
+            int rowCount = Convert.ToInt32(tbl.Rows[0][0]);
+
+            return Tuple.Create<List<Parcel>, int>(parcels, rowCount);
+        } 
+        #endregion
+
+        #region SearchParcelByState
+        public Tuple<List<Parcel>, int> SearchParcelByState(string state)
+        {
+            DaoParcels dao = new DaoParcels();
+            //this dataset returns 2 data tables
+            //i am doing this to avoid making 2 trips to the db
+            //1 for the data
+            //1 for the row count
+
+            DataSet ds = dao.SearchParcelByState(state);
+            List<Parcel> parcels = new List<Parcel>();
+
+            //1st table for the data
+            DataTable tbl = ds.Tables[0];
+            for (int i = 0; i < tbl.Rows.Count; i++)
+            {
+                DataRow row = tbl.Rows[i];
+                Parcel parcel = mapDataRowToParcel(row);
+                parcels.Add(parcel);
+            }
+
+            //2nd table for the row count
+            tbl = ds.Tables[1];
+            int rowCount = Convert.ToInt32(tbl.Rows[0][0]);
+
+            return Tuple.Create<List<Parcel>, int>(parcels, rowCount);
+        } 
+        #endregion
+
+        #region SearchParcelByZip
+        public Tuple<List<Parcel>, int> SearchParcelByZip(string zip)
+        {
+            DaoParcels dao = new DaoParcels();
+            //this dataset returns 2 data tables
+            //i am doing this to avoid making 2 trips to the db
+            //1 for the data
+            //1 for the row count
+
+            DataSet ds = dao.SearchParcelByZip(zip);
+            List<Parcel> parcels = new List<Parcel>();
+
+            //1st table for the data
+            DataTable tbl = ds.Tables[0];
+            for (int i = 0; i < tbl.Rows.Count; i++)
+            {
+                DataRow row = tbl.Rows[i];
+                Parcel parcel = mapDataRowToParcel(row);
+                parcels.Add(parcel);
+            }
+
+            //2nd table for the row count
+            tbl = ds.Tables[1];
+            int rowCount = Convert.ToInt32(tbl.Rows[0][0]);
+
+            return Tuple.Create<List<Parcel>, int>(parcels, rowCount);
+        } 
+        #endregion
     }
 }

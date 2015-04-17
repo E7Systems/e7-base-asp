@@ -92,7 +92,7 @@ namespace web_mvc.Controllers
         } 
         #endregion
 
-        #region Index Action (Post)
+        #region Index Action (Post) - Currently used for Search
         [HttpPost]
         public ActionResult Index(ProjectIndex form)
         {

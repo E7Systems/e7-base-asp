@@ -14,9 +14,9 @@ namespace web_mvc.Controllers
     {
 
         private static readonly ILog m_logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private const int PROJECTS_PER_PAGE = 10;
+        private const int RECORDS_PER_PAGE = 10;
 
-        #region Index Action (GET)
+        #region Index Action (Get)
         // GET: /Parcel
         // Displays a page of parcels
 
@@ -52,10 +52,10 @@ namespace web_mvc.Controllers
             //data comes back packed into a tuple to avoid 2 trips to db
             //1st item is page of data
             //2nd item is total number of records in table
-            pagedDataTuple = parcelsBusinessLogic.GetParcelPage(page, PROJECTS_PER_PAGE);
+            pagedDataTuple = parcelsBusinessLogic.GetParcelPage(page, RECORDS_PER_PAGE);
             List<Parcel> pageOfProjects = pagedDataTuple.Item1;
             int totalProjectsRecordCount = pagedDataTuple.Item2;
-            m_logger.DebugFormat("Current Page: {0}, Rows per page: {1}, totalProjectsRecordCount: {2}", page, PROJECTS_PER_PAGE, totalProjectsRecordCount);
+            m_logger.DebugFormat("Current Page: {0}, Rows per page: {1}, totalProjectsRecordCount: {2}", page, RECORDS_PER_PAGE, totalProjectsRecordCount);
 
             #endregion
 
@@ -84,7 +84,7 @@ namespace web_mvc.Controllers
             parcelIndex.SortOrder = sortOrder;
 
             //stuff page of Projects into a ViewModel
-            parcelIndex.Parcels = new PagedData<Parcel>(pageOfProjects, totalProjectsRecordCount, page, PROJECTS_PER_PAGE);
+            parcelIndex.Parcels = new PagedData<Parcel>(pageOfProjects, totalProjectsRecordCount, page, RECORDS_PER_PAGE);
 
             //send it to be displayed in the view
             return View(parcelIndex);
@@ -92,6 +92,53 @@ namespace web_mvc.Controllers
 
         } 
         #endregion
+
+        [HttpPost]
+        public ActionResult Index(ParcelIndex form)
+        {
+            m_logger.DebugFormat("Entering Index Action (Post)");
+
+            ParcelsBusinessLogic parcelsBusinessLogic = new ParcelsBusinessLogic();
+            Tuple<List<Parcel>, int> pagedDataTuple = null;
+
+            //walk from left to right in UI order, looking for a non-empty UI search element.
+            //when one is found, use it ignoring the others.
+            if (!string.IsNullOrEmpty(form.APNSearchTerm))
+            {
+                m_logger.DebugFormat("Searching by APN. Search term is: {0}", form.APNSearchTerm);
+                pagedDataTuple = parcelsBusinessLogic.SearchParcelByAPN(form.APNSearchTerm);
+            }
+            else if(!string.IsNullOrEmpty(form.StreetSearchTerm))
+            {
+                m_logger.DebugFormat("Searching by Street. Search term is: {0}", form.StreetSearchTerm);
+                pagedDataTuple = parcelsBusinessLogic.SearchParcelByStreet(form.APNSearchTerm);
+            }
+            else if (!string.IsNullOrEmpty(form.CitySearchTerm))
+            {
+                m_logger.DebugFormat("Searching by City. Search term is: {0}", form.CitySearchTerm);
+                pagedDataTuple = parcelsBusinessLogic.SearchParcelByCity(form.CitySearchTerm);
+            }
+            else if (!string.IsNullOrEmpty(form.StateSearchTerm))
+            {
+                m_logger.DebugFormat("Searching by State. Search term is: {0}", form.StateSearchTerm);
+                pagedDataTuple = parcelsBusinessLogic.SearchParcelByState(form.StateSearchTerm);
+            }
+            else if (!string.IsNullOrEmpty(form.ZipSearchTerm))
+            {
+                m_logger.DebugFormat("Searching by Zip. Search term is: {0}", form.ZipSearchTerm);
+                pagedDataTuple = parcelsBusinessLogic.SearchParcelByZip(form.ZipSearchTerm);
+            }
+            else
+            {
+                RedirectToAction("Index");  //this happens too late, will not work
+            }
+
+            List<Parcel> pageOfParcels = pagedDataTuple.Item1;
+            int totalParcelsRecordCount = pagedDataTuple.Item2;
+            const int SEARCH_START_PAGE = 1; //start at page 1 with our search results
+            form.Parcels = new PagedData<Parcel>(pageOfParcels, totalParcelsRecordCount, SEARCH_START_PAGE, RECORDS_PER_PAGE);
+            return View(form);
+        }
 
         #region Create Action (GET)
         // GET /Parcel/Create
@@ -153,7 +200,7 @@ namespace web_mvc.Controllers
         #endregion
 
         #region Edit Action (Post)
-        // POST /Parcel/Create
+        // POST /Parcel/Edit
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult Edit(ParcelEdit form)
         {
@@ -185,6 +232,7 @@ namespace web_mvc.Controllers
         [HttpPost]//  TODO, add ValidateAntiForgeryToken
         public ActionResult Delete(int parcelID)
         {
+            m_logger.DebugFormat("Entering Delete with parcelID : {0}", parcelID);
             ParcelsBusinessLogic parcelsBusinessLogic = new ParcelsBusinessLogic();
             bool success = parcelsBusinessLogic.SoftDeleteParcel(parcelID);
             m_logger.DebugFormat("parcelsBusinessLogic.SoftDeleteParcel returned : {0}", success);
