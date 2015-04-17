@@ -101,6 +101,7 @@ namespace web_mvc.Controllers
             ParcelsBusinessLogic parcelsBusinessLogic = new ParcelsBusinessLogic();
             Tuple<List<Parcel>, int> pagedDataTuple = null;
 
+            
             //walk from left to right in UI order, looking for a non-empty UI search element.
             //when one is found, use it ignoring the others.
             if (!string.IsNullOrEmpty(form.APNSearchTerm))

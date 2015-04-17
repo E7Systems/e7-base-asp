@@ -531,15 +531,6 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-CREATE PROCEDURE [dbo].[up_Project_Get_Count]
-AS
-Select COUNT(*) from Projects
-WHERE IsDeleted = 0
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER OFF
-GO
 CREATE PROCEDURE [dbo].[up_Project_Get_By_ProjectID]
 @ProjectID int
 AS
@@ -979,6 +970,71 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
+CREATE PROCEDURE [dbo].[up_Parcel_Search_By_Zip]
+@Zip varchar(255)
+AS
+Select * from Parcels
+Where (Zip = @Zip) AND IsDeleted=0;
+
+Select COUNT(*) from Parcels
+Where (Zip = @Zip) AND IsDeleted=0;
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+CREATE PROCEDURE [dbo].[up_Parcel_Search_By_Street]
+@Street varchar(255)
+AS
+Select * from Parcels
+Where (Street = @Street) AND IsDeleted=0;
+
+Select COUNT(*) from Parcels
+Where (Street = @Street) AND IsDeleted=0;
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+CREATE PROCEDURE [dbo].[up_Parcel_Search_By_State]
+@State varchar(255)
+AS
+Select * from Parcels
+Where (ParcelState = @State) AND IsDeleted=0;
+
+Select COUNT(*) from Parcels
+Where (ParcelState = @State) AND IsDeleted=0;
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+CREATE PROCEDURE [dbo].[up_Parcel_Search_By_City]
+@City varchar(255)
+AS
+Select * from Parcels
+Where (City = @City) AND IsDeleted=0;
+
+Select COUNT(*) from Parcels
+Where (City = @City) AND IsDeleted=0;
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+CREATE PROCEDURE [dbo].[up_Parcel_Search_By_APN]
+@APN varchar(255)
+AS
+Select * from Parcels
+Where (APN = @APN) AND IsDeleted=0;
+
+Select COUNT(*) from Parcels
+Where (APN = @APN) AND IsDeleted=0;
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
 CREATE PROCEDURE [dbo].[up_Parcel_Insert]
 	@APN varchar(255),
 	@OwnerPersonID int,
@@ -991,6 +1047,30 @@ INSERT INTO Parcels
 				(APN,  OwnerPersonID,  Street,  City, ParcelState, Zip)
 VALUES			(@APN, @OwnerPersonID, @Street, @City, @ParcelState, @Zip);   
 SELECT SCOPE_IDENTITY();
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+CREATE PROCEDURE [dbo].[up_Parcel_Get_Page]
+    @rowFrom INT,
+    @rowTo INT
+AS
+
+--ProjectID not strictly necessary but it helps in verifying paging logic is working correctly
+SELECT * FROM
+(
+SELECT ROW_NUMBER() OVER (ORDER BY ParcelID desc ) AS rowIndex, ParcelID, APN, OwnerPersonID, Street, City, ParcelState, Zip
+FROM Parcels
+WHERE IsDeleted=0
+)
+tbl
+WHERE rowIndex BETWEEN @rowFrom AND @rowTo 
+
+--get a count of all rows in the projects table and send it back via OUTPUT
+--this avoids a second expensive trip back to the database to get total row count
+SELECT COUNT(*) FROM Parcels
+WHERE IsDeleted = 0
 GO
 SET ANSI_NULLS ON
 GO
@@ -3942,7 +4022,7 @@ GO
 --todo:  add genesis data here
 
 --put the database schema version in the db
-INSERT INTO Parameters(ParameterName, [Value]) Values('DBVersion', '1.0.0.3')
+INSERT INTO Parameters(ParameterName, [Value]) Values('DBVersion', '1.0.0.4')
 GO
 
 --/\*.*?\*/.*?\n
